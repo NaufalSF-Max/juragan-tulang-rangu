@@ -183,7 +183,7 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 
 								$result = $conn->query($sql);
 								$index = 1;
-								$basePath = '/projek-umkm/uploads/';
+								$basePath = dirname($_SERVER['SCRIPT_NAME'], 2) . '/uploads/';
 
 								if ($result && $result->num_rows > 0):
 									while ($row = $result->fetch_assoc()):
