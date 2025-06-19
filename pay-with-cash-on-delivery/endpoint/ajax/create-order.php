@@ -184,11 +184,30 @@ if (!$stmt->execute()) {
 }
 $stmt->close();
 
+$_SESSION['last_transaction'] = [
+    'id' => $transactionId,
+    'items' => $items,
+    'delivery_fee' => $delivery_fee,
+    'total' => $total,
+    'address' => $address,
+    'name' => $name,
+    'email' => $email,
+    'phone' => $phone,
+    'message' => $message,
+    'payment_method' => $payment_method,
+    'delivery_method' => $delivery_method
+];
+
 // Hapus cart
 $del = $conn->prepare("DELETE FROM carts WHERE user_id = ?");
 $del->bind_param("s", $userId);
 $del->execute();
 $del->close();
+
+session_write_close(); //agar $_SESSION['last_transaction'] tersimpan sebelum redirect
+header("Location: ../../thank-you.php?invoice_id=$transactionId");
+exit;
+
 
 /// ================================
 // Kirim WhatsApp Invoice via UltraMSG
