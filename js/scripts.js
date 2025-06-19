@@ -28,17 +28,6 @@
 	});
 
 	// =====================================================
-	// LAZY LOAD
-	// =====================================================
-	if ($('.lazy').length > 0) {
-
-		new LazyLoad({
-			elements_selector: '.lazy'
-		});
-
-	}
-
-	// =====================================================
 	// BACK TO TOP BUTTON
 	// =====================================================
 	function scrollToTop() {
@@ -96,12 +85,10 @@
 
 		// Prevent moving forward if total is zero
 		beforeForward: function (event, state) {
-
-			if ($('.total').val() == '$ 0.00') {
+			if ($('.total').val() == 'Rp 0') {
 				validateTotal();
 				return false; // prevent moving forward
 			}
-
 		},
 
 		// Reset validation and remove error notifications from the form
@@ -121,67 +108,58 @@
 	// =====================================================
 	if ($('.isotope-item').length > 0) {
 
-		// Quick search regex
 		var qsRegex;
 		var filterValue;
 
-		// Init Isotope
 		var $grid = $('.grid').isotope({
-			itemSelector: '.isotope-item',			
+			itemSelector: '.isotope-item',
 			filter: function () {
 				var $this = $(this);
-				var searchResult = qsRegex ? $this.text().match(qsRegex) : true;
+				var searchResult = qsRegex ? $this.find('h3').text().match(qsRegex) : true;
 				var selectResult = filterValue ? $this.is(filterValue) : true;
 				return searchResult && selectResult;
 			}
 		});
 
-		// Bind filter on select change
+		// Filter kategori dari select
 		$('#category').on('change', function () {
-			// Get filter value from option value
 			filterValue = $(this).val();
 			$grid.isotope();
 		});
 
-		// Use value of search field to filter
+		// Filter pencarian nama
 		var $quicksearch = $('#search').keyup(debounce(function () {
 			qsRegex = new RegExp($quicksearch.val(), 'gi');
 			$grid.isotope();
 		}));
 
-		// Debounce so filtering doesn't happen every millisecond
+		// Debounce helper
 		function debounce(fn, threshold) {
 			var timeout;
 			return function debounced() {
-				if (timeout) {
-					clearTimeout(timeout);
-				}
-				function delayed() {
-					fn();
-					timeout = null;
-				}
-				setTimeout(delayed, threshold || 100);
+				clearTimeout(timeout);
+				timeout = setTimeout(fn, threshold || 100);
 			};
 		}
 
-		// Reset filters
+		// Reset semua filter
 		$('.isotope-reset').on('click', function () {
 			qsRegex = '';
 			filterValue = '';
 
 			$('#search').val('');
-			$('#category').prop('selectedIndex', 0).niceSelect('update');;
+			$('#category').prop('selectedIndex', 0).niceSelect('update');
 
 			$grid.isotope();
-
 		});
 	}
+
 
 	// =====================================================
 	// MOBILE MENU
 	// =====================================================
 	var $menu = $("nav#menu").mmenu({
-		"extensions": ["pagedim-black", "theme-white"], // "theme-dark" can be changed to: "theme-dark"
+		"extensions": ["pagedim-black", "theme-white"], 
 		counters: true,
 		keyboardNavigation: {
 			enable: true,
@@ -192,7 +170,7 @@
 		},
 		navbars: [{
 			position: 'bottom',
-			content: ['<a href="#">© 2021 FoodBoard</a>']
+			content: ['<a href="#">© 2025 Juragan Tulang Rangu Karawang</a>']
 		}]
 	}, {
 		// configuration
@@ -261,7 +239,7 @@
 	// MODAL
 	// =====================================================
 	function resetModalOptions() {
-		$(':radio[value="Medium: 32cm"]').prop('checked', true);
+		$(':radio[value="Medium"]').prop('checked', true);
 		$('.modal-popup .inp-cbx').prop('checked', false);
 	}
 
@@ -279,16 +257,19 @@
 		mainClass: 'my-mfp-zoom-in',
 		callbacks: {
 			close: function () {
-				resetModalOptions();
+			resetModalOptions();
 			}
 		}
-
 	});
 
 	$('.btn-modal-close').on('click', function () {
-
 		$.magnificPopup.close();
+	});
 
+	$('.btn-confirm-delete').on('click', function () {
+		const cartId = $('#modalConfirmDeleteCart').data('cart-id');
+		deleteCartItem(cartId);
+		$.magnificPopup.close();
 	});
 
 	// =====================================================
@@ -317,7 +298,7 @@
 	// Add custom empty order validation
 	window.Parsley.addValidator('emptyOrder', {
 		validateString: function (value) {
-			return value !== '$ 0.00';
+			return value !== 'Rp 0';
 		},
 		messages: {
 			en: 'Order is empty.'
@@ -334,21 +315,197 @@
 	// =====================================================
 	// HELPER FUNCTIONS
 	// =====================================================
+	
+	function formatRupiah(angka) {
+		return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+	}
 
-	// Function to format item prices usign priceFormat plugin
-	function formatPrice() {
-		$('.format-price').priceFormat({
-			prefix: '$ ',
-			centsSeparator: '.',
-			thousandsSeparator: ','
+	// Load zona ke select
+	function loadDeliveryZones() {
+		$.getJSON('endpoint/ajax/get_delivery_zones.php', function(res) {
+			if (res.status === 'ok') {
+				const $zone = $('#deliveryZone');
+				$zone.empty();
+				$zone.append(`<option value="">-- Select Zone --</option>`);
+				res.data.forEach(z => {
+					$zone.append(`<option value="${z.id}" data-fee="${z.fee}">${z.label} - ${formatRupiah(z.fee)}</option>`);
+				});
+			}
 		});
 	}
+
+	// Update total jika zona berubah
+	$('#deliveryZone').on('change', function () {
+		const selectedFee = $('option:selected', this).data('fee') || 0;
+		const productTotal = parseInt($('.total').val()) || 0;
+
+		const newTotal = productTotal + selectedFee;
+		$('.totalValue').text(formatRupiah(newTotal));
+		$('#totalOrderSummary').val(newTotal);
+	});
+
+	// Sembunyikan/ tampilkan zona jika metode bukan delivery
+	$('#shippingMethod').on('change', function () {
+		const val = $(this).val();
+		if (val === 'delivery') {
+			$('#zoneContainer').show();
+		} else {
+			$('#zoneContainer').hide();
+			$('#deliveryZone').val('');
+			// Reset total jadi hanya produk
+			const base = parseInt($('.total').val()) || 0;
+			$('.totalValue').text(formatRupiah(base));
+			$('#totalOrderSummary').val(base);
+		}
+	});
+
+	$(document).ready(function () {
+		loadDeliveryZones();
+	});
+
+	function loadCartItems() {
+		$.getJSON('endpoint/ajax/get_cart_items.php', function(response) {
+			const itemList = $('#itemList');
+			itemList.empty();
+
+			if (response.status === 'ok') {
+				const items = response.data;
+
+				if (items.length === 0) {
+					itemList.append(`
+						<li id="emptyCart">
+							<div class="order-list-img"><img src="../img/bg/empty-cart-small.png" alt="Empty Cart"/></div>
+							<div class="order-list-details">
+								<h4>Your cart is empty<br/><small>Start adding items</small></h4>
+								<div class="order-list-price format-price">Rp 0</div>
+							</div>
+						</li>
+					`);
+				} else {
+					items.forEach(item => {
+						// Total harga = base + semua harga extra
+						let totalPrice = item.price;
+						if (Array.isArray(item.extras)) {
+							item.extras.forEach(extra => {
+								totalPrice += extra.price;
+							});
+						}
+
+						const subTotal = totalPrice * item.quantity;
+
+						let extrasText = '';
+						if (item.extras && item.extras.length > 0) {
+							extrasText = '<br/><small>Extra: ' + item.extras.map(e => e.variant).join(', ') + '</small>';
+						}
+
+						itemList.append(`
+							<li id="cartItem${item.cart_id}">
+								<div class="order-list-img"><img src="${item.image}" alt=""></div>
+								<div class="order-list-details">
+									<h4>${item.name}<br/><small>Size: ${item.variant}</small>${extrasText}</h4>
+									<div class="qty-buttons">
+										<input type="button" value="+" class="qtyplus" data-id="${item.cart_id}" data-qty="${item.quantity}">
+										<input type="text" name="qty" value="${item.quantity}" class="qty form-control" readonly>
+										<input type="button" value="-" class="qtyminus" data-id="${item.cart_id}" data-qty="${item.quantity}">
+									</div>
+									<div class="order-list-price format-price">${formatRupiah(subTotal)}</div>
+									<div class="order-list-delete"><a href="javascript:;" class="delete-cart" data-id="${item.cart_id}"><i class="icon icon-trash"></i></a></div>
+								</div>
+							</li>
+						`);
+					});
+				}
+
+				// Attach events
+				attachCartEvents();
+
+			}
+				if (typeof response.total_products_price !== 'undefined') {
+					const deliveryOption = $('input[name="transfer"]:checked').val();
+					const deliveryFee = deliveryOption === 'delivery' ? 10000 : 0;
+					const total = response.total_products_price + deliveryFee;
+		
+					$('.total').val(total);
+					$('.totalValue').text(formatRupiah(total));
+					$('#totalOrderSummary').val(total);
+				}
+		});
+	}
+ 
+	function attachCartEvents() {
+		// Tambah qty
+		$('.qtyplus').off().on('click', function () {
+			const cartId = $(this).data('id');
+			let currentQty = parseInt($(this).data('qty'));
+
+			if (currentQty < 10) {
+				updateCartQuantity(cartId, currentQty + 1);
+			} else {
+				callWarningPopup('#modalWarningQtyMaxLimit');
+			}
+		});
+
+		// Kurangi qty
+		$('.qtyminus').off().on('click', function () {
+			const cartId = $(this).data('id');
+			let currentQty = parseInt($(this).data('qty'));
+
+			if (currentQty > 1) {
+				updateCartQuantity(cartId, currentQty - 1);
+			} else {
+				$('#modalWarningQtyMinLimit').data('cart-id', cartId);
+				callWarningPopup('#modalWarningQtyMinLimit');
+			}
+		});
+
+		// Hapus item langsung (pakai modal)
+		$('.delete-cart').off().on('click', function () {
+			const cartId = $(this).data('id');
+			// Simpan cart ID ke modal agar bisa dipakai saat konfirmasi
+			$('#modalConfirmDeleteCart').data('cart-id', cartId);
+			callWarningPopup('#modalConfirmDeleteCart');
+		});
+	}
+
+	function updateCartQuantity(cartId, newQty) {
+		$.post('endpoint/ajax/update_cart_quantity.php', {
+			cart_id: cartId,
+			quantity: newQty
+		}, function (res) {
+			if (res.status === 'success') {
+				loadCartItems();
+			} else {
+				alert('Gagal memperbarui kuantitas.');
+			}
+		}, 'json');
+	}
+
+	function deleteCartItem(cartId) {
+		$.post('endpoint/ajax/delete_cart_item.php', {
+			cart_id: cartId
+		}, function (res) {
+			if (res.status === 'success') {
+				loadCartItems();
+			} else {
+				alert('Gagal menghapus item.');
+			}
+		}, 'json');
+	}
+
+	$(document).ready(function() {
+		loadCartItems();
+		
+		$('input[name="transfer"]').on('change', function () {
+			updateTotal();
+		});
+
+	});
 
 	// Function to reset total price
 	function resetTotal() {
 
 		$('.totalTitle').val('Total');
-		$('.total').val('0.00');
+		$('.total').val('0');
 		formatPrice();
 
 	}
@@ -373,7 +530,7 @@
 		});
 	}
 
-	// Function to show a popup essage that item is added to cart
+	// Function to show a popup message that item is added to cart
 	function showItemAddedMessage() {
 
 		// Only show this message when there is no popup opened
@@ -391,423 +548,85 @@
 		}
 	}
 
-	// Function to show a popup essage that item is added to cart
-	function showItemAlreadyInCartMessage() {
-
-		// Only show this message when there is no popup opened
-		if (!$.magnificPopup.instance.isOpen) {
-
-			// Show already in cart message
-			$('.alreadyInCartMsg').fadeIn('slow', function () {
-				$('.alreadyInCartMsg').fadeOut();
-			});
-
-		} else if ($.magnificPopup.instance.isOpen) { // Only show this
-			// message when a popup
-			// is opened
-			$('.alreadyInCartMsgInModal').fadeIn('slow', function () {
-				$('.alreadyInCartMsgInModal').fadeOut();
-			});
-		}
-	}
 
 	// Function to validate total price
 	function validateTotal() {
 		$('#totalOrderSummary').parsley().validate();
 	}
 
-	// =====================================================
-	// CART FUNCTIONS
-	// =====================================================
-	var id = '';
-	var rowId = '';
-	var size = '';
-	var thumbnailPath = '';
-	var itemTitle = '';
-	var description = '';
-	var itemPrice = '';
-	var extraTitle = '';
-	var extraPrice = '';
-	var extraIsChecked = false;
-	var qtyInput = 0;
-	var actualQty = 0;
-	var maxQty = 10;
-	var subSum = 0;
-	var deliveryFee = 10;
-	var total = 0;
-
-	// Function to set empty cart image
-	function setEmptyCart() {
-
-		// Create the dedicated row for the empty cart element
-		$('#itemList').append('<li id="emptyCart"></li>');
-
-		// Fill the dedicated row
-		$('#emptyCart').html('<div class="order-list-img"><img src="../img/bg/empty-cart-small.jpg" alt="Your cart is empty"/></div><div class="order-list-details"> <h4>Your cart is empty</a><br/><small>Start adding items</small></h4> <div class="order-list-price format-price">0.00</div></div>');
-		formatPrice();
-	}
-
-	// Function to check if the cart is empty
-	function isCartEmpty() {
-
-		if ($('ul#itemList li').length == 0) {
-			return true;
-		}
-	}
-
-	// Function to update sub summary
-	function updateSubSum(id, rowId, itemPrice, actualQty) {
-
-		// Calculate subSum
-		subSum = (itemPrice * 1) * (actualQty * 1);
-
-		// Update subSum
-		$('#cartItem' + id + rowId + ' .order-list-details .order-list-price').text(subSum.toFixed(2));
-	}
-
 	// Function to update total summary
 	function updateTotal() {
+		let total = 0;
 
-		total = 0;
-
-		// Update total with prices in order list
+		// Jumlahkan semua harga produk
 		$('.order-list-price').each(function () {
-
-			total += ($(this).text().match(/[0-9.]+/g) * 1);
-
-		});
-		//Add delivery fee
-		total = total + (deliveryFee * 1);
-
-		// Set total
-		$('.total').val(total.toFixed(2));
-		$('.totalValue').text(total.toFixed(2));
-
-		// If cart is empty do not calculate any cost
-		if ($('ul#itemList li#emptyCart').length > 0) {
-			total = 0;
-			$('.total').val(total.toFixed(2));
-			$('.totalValue').text(total.toFixed(2));
-		}
-
-		formatPrice();
-
-	}
-
-	// Function to insert item into its dedicated cart row based on: id, rowId, itemSubtitle, thumbnailPath, itemTitle, extraTitle, itemPrice
-	function insertItemIntoCartRow(id, rowId, itemSubtitle, thumbnailPath, itemTitle, extraTitle, itemPrice) {
-
-		// Create the dedicated row for the cart element
-		$('#itemList').append('<li id="cartItem' + id + rowId + '"></li>');
-
-		// Insert item into its dedicated row in the cart
-		$('#cartItem' + id + rowId).html('<div class="order-list-img"><img src="' + thumbnailPath + '" alt=""></div><div class="order-list-details"><h4>' + itemTitle + '<br/> <small>' + itemSubtitle + extraTitle + '</small> </h4> <div class="qty-buttons"> <input type="button" value="+" class="qtyplus" name="plus"> <input type="text" name="qty" value="1" class="qty form-control"> <input type="button" value="-" class="qtyminus" name="minus"> </div><div class="order-list-price format-price">' + itemPrice.toFixed(2) + '</div><div class="order-list-delete"><a href="javascript:;" id="deleteCartItem' + id + rowId + '"><i class="icon icon-trash"></i></a></div></div>');
-
-		// Handle if an added item will be deleted
-		$('#deleteCartItem' + id + rowId).on('click', function () {
-
-			// Fade out the deleted item
-			$('#cartItem' + id + rowId).fadeOut('slow', function () {
-
-				// Remove item from cart
-				$('#cartItem' + id + rowId).remove();
-
-				// Handle if cart is empty
-				if (isCartEmpty()) {
-					setEmptyCart();
-				}
-
-				// Update total
-				updateTotal();
-
-			});
+			const hargaItem = parseInt($(this).text().replace(/[^\d]/g, '')) || 0;
+			total += hargaItem;
 		});
 
-		// Handle qty plus
-		$('#cartItem' + id + rowId + ' .order-list-details .qty-buttons .qtyplus').on('click', function () {
-
-			qtyInput = $(this).parent('.qty-buttons').find('.qty');
-			actualQty = parseInt(qtyInput.val(), 10);
-
-			// If qty number is less than the max.limit
-			if (actualQty < maxQty) {
-
-				// Increment
-				qtyInput.val(actualQty + 1);
-				actualQty = qtyInput.val();
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, actualQty); // actualQty is the increased value
-
-				// Update total
-				updateTotal();
-
-			} else {
-				// Warning popup
-				callWarningPopup('#modalWarningQtyMaxLimit');
-			}
-		});
-
-		// Handle qty minus
-		$('#cartItem' + id + rowId + ' .order-list-details .qty-buttons .qtyminus').on('click', function () {
-
-			qtyInput = $(this).parent('.qty-buttons').find('.qty');
-			actualQty = parseInt(qtyInput.val(), 10);
-
-			if (actualQty > 1) {
-
-				// Decrement
-				qtyInput.val(actualQty - 1);
-				actualQty = qtyInput.val();
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, actualQty); // actualQty is the decreased value
-
-				// Calculate total
-				updateTotal();
-
-			} else {
-				// Warning popup
-				callWarningPopup('#modalWarningQtyMinLimit');
-			}
-		});
-
-		// Validation of quantity inputs: min and max limit handling on keyup
-		$('#cartItem' + id + rowId + ' .order-list-details .qty-buttons .qty').on('keyup', function () {
-
-			// If qty number is more than the max.limit
-			if ($(this).val() > maxQty) {
-
-				// Warning popup
-				callWarningPopup('#modalWarningQtyMaxLimit');
-
-				// Set max limit into input
-				$(this).val(maxQty);
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, maxQty); // actualQty is the maxQty
-
-				// Update total
-				updateTotal();
-
-			} else if ($(this).val() < 1) { // If qty number is less
-				// than the min.limit
-
-				// Warning popup
-				callWarningPopup('#modalWarningQtyMinLimit');
-
-				// Set min limit into input
-				$(this).val(1);
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, 1); // actualQty is
-				// 1
-
-				// Update total
-				updateTotal();
-
-			} else {
-
-				// Get actual quantity
-				actualQty = parseInt($(this).val(), 10);
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, actualQty); // actualQty is the retrieved qty
-
-				// Update total
-				updateTotal();
-			}
-
-		});
-
-		// Validation of quantity inputs: exclude letters and spec chars on keypress
-		$('.qty').on('keypress', function (event) {
-			if (event.which != 8 && isNaN(String.fromCharCode(event.which))) {
-				event.preventDefault();
-			}
-		});
-
-		// Update total
-		updateTotal();
-
-		// Show item is added into the cart message
-		showItemAddedMessage(id);
-
-	}
-
-	// Function to add item into cart
-	function addOptionsItemToCart(id) {
-
-		// Remove empty cart image and notifications
-		$('#emptyCart').remove();
-
-		// Collect item data
-		size = $('input[name="size-options-item-' + id + '"]:checked').val();
-
-		itemTitle = $('#gridItem' + id + ' .item-title h3').text();
-		itemPrice = $('input[name="size-options-item-' + id + '"]:checked').nextAll('.option-price').text();
-		itemPrice = (itemPrice.match(/[0-9.]+/g)) * 1; // Find digits, dot and convert to number
-
-		extraIsChecked = $('#item' + id + 'Extra').is(':checked');
-		extraTitle = $('#item' + id + 'ExtraTitle').val();
-		extraPrice = ($('#item' + id + 'Extra').val()) * 1; // Find digits, dot and convert to number
-
-		thumbnailPath = '../img/gallery/grid-items-small/' + id + '.jpg';
-
-		// Capture row where the item will be inserted
-		if (size == 'Small: 26cm') {
-
-			// If extra is NOT checked
-			if (!extraIsChecked) {
-
-				rowId = 'S';
-				extraTitle = '';
-
-				// Check if item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-
-				}
-
-			} else if (extraIsChecked) { // If extra is checked
-
-				rowId = 'SExtra';
-				extraTitle = ', ' + extraTitle;
-				itemPrice += extraPrice;
-
-				// Check if extra item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-			}
-		}
-		if (size == 'Medium: 32cm') {
-
-			// If extra is NOT checked
-			if (!extraIsChecked) {
-
-				rowId = 'M';
-				extraTitle = '';
-
-				// Check if item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-
-			} else if (extraIsChecked) { // If extra is checked
-
-				rowId = 'MExtra';
-				extraTitle = ', ' + extraTitle;
-				itemPrice += extraPrice;
-
-				// Check if extra item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-			}
-		}
-		if (size == 'Large: 45cm') {
-
-			// If extra is NOT checked
-			if (!extraIsChecked) {
-
-				rowId = 'L';
-				extraTitle = '';
-
-				// Check if item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-
-			} else if (extraIsChecked) { // If extra is checked
-
-				rowId = 'LExtra';
-				extraTitle = ', ' + extraTitle;
-				itemPrice += extraPrice;
-
-				// Check if extra item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-			}
-		}
-	}
-
-	// Function to add item into cart
-	function addItemToCart(id) {
-
-		// Remove empty cart image and notifications
-		$('#emptyCart').remove();
-
-		// Collect and set item data
-		rowId = '';
-		extraTitle = '';
-		description = $('#gridItem' + id + ' .item-title small').text();
-
-		itemTitle = $('#gridItem' + id + ' .item-title h3').text();
-		itemPrice = $('#gridItem' + id + ' .item-price').text();
-		itemPrice = (itemPrice.match(/[0-9.]+/g)) * 1; // Find digits, dot and convert to number
-
-		thumbnailPath = '../img/gallery/grid-items-small/' + id + '.jpg';
-
-		// Check if item already exists in cart or not
-		if ($('#cartItem' + id + rowId).length > 0) {
-
-			showItemAlreadyInCartMessage();
-
-		} else { // If not: put it into the cart
-
-			insertItemIntoCartRow(id, rowId, description, thumbnailPath, itemTitle, extraTitle, itemPrice);
-
-		}
+		// Ambil metode pengiriman
+		const deliveryOption = $('input[name="transfer"]:checked').val();
+		const deliveryFee = deliveryOption === 'delivery' ? 10000 : 0;
+		total += deliveryFee;
+
+		// Update tampilan total
+		$('.total').val(total);
+		$('.totalValue').text(formatRupiah(total));
+		$('#totalOrderSummary').val(total);
 	}
 
 	// Item having options is added to cart
-	$('.add-options-item-to-cart').on('click', function () {
+	$(document).on('click', '.add-options-item-to-cart', function () {
+		const $btn = $(this);
+		const productId = $btn.data('product-id');
+		let optionId = $btn.data('option-id') || null;
+		let extraIds = [];
 
-		id = $(this).parent().parent().parent().parent().attr('id').match(/\d+/);
-		addOptionsItemToCart(id);
-		validateTotal();
+		// Cek apakah dari modal
+		const $sizeInput = $(`input[name="size-options-item-${productId}"]:checked`);
+		if ($sizeInput.length > 0) {
+			optionId = $sizeInput.val();
+			extraIds = $(`input[name="extra-options-item-${productId}[]"]:checked`)
+				.map(function () {
+					return $(this).val();
+				}).get();
+		}
 
-	});
+		if (!optionId) {
+			callWarningPopup('Ukuran produk belum dipilih!');
+			return;
+		}
 
-	// Pure item without options is added to cart
-	$('.add-item-to-cart').on('click', function () {
-
-		id = $(this).parent().parent().parent().parent().attr('id').match(/\d+/);
-		addItemToCart(id);
-		validateTotal();
-
+		// Kirim request
+		$.ajax({
+			url: 'endpoint/ajax/add_to_cart.php',
+			method: 'POST',
+			data: {
+				product_id: productId,
+				option_id: optionId,
+				extra_ids: extraIds,
+				quantity: 1
+			},
+			traditional: true,
+			dataType: 'json',
+			success: function (res) {
+				if (res.status === 'success') {
+					showItemAddedMessage();
+					loadCartItems();
+				}  else if (res.status === 'error') {
+					if (res.message === 'Quantity maximum limit is: 10 !') {
+						callWarningPopup('#modalWarningQtyMaxLimit');
+					} else {
+						$('#modalWarningGeneric .warning-text').text(res.message);
+						callWarningPopup('#modalWarningGeneric');
+					}
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error('AJAX Error:', xhr.responseText);
+				alert('Gagal menghubungi server');
+			}
+		});
 	});
 
 	setEmptyCart();
