@@ -108,67 +108,58 @@
 	// =====================================================
 	if ($('.isotope-item').length > 0) {
 
-		// Quick search regex
 		var qsRegex;
 		var filterValue;
 
-		// Init Isotope
 		var $grid = $('.grid').isotope({
-			itemSelector: '.isotope-item',			
+			itemSelector: '.isotope-item',
 			filter: function () {
 				var $this = $(this);
-				var searchResult = qsRegex ? $this.text().match(qsRegex) : true;
+				var searchResult = qsRegex ? $this.find('h3').text().match(qsRegex) : true;
 				var selectResult = filterValue ? $this.is(filterValue) : true;
 				return searchResult && selectResult;
 			}
 		});
 
-		// Bind filter on select change
+		// Filter kategori dari select
 		$('#category').on('change', function () {
-			// Get filter value from option value
 			filterValue = $(this).val();
 			$grid.isotope();
 		});
 
-		// Use value of search field to filter
+		// Filter pencarian nama
 		var $quicksearch = $('#search').keyup(debounce(function () {
 			qsRegex = new RegExp($quicksearch.val(), 'gi');
 			$grid.isotope();
 		}));
 
-		// Debounce so filtering doesn't happen every millisecond
+		// Debounce helper
 		function debounce(fn, threshold) {
 			var timeout;
 			return function debounced() {
-				if (timeout) {
-					clearTimeout(timeout);
-				}
-				function delayed() {
-					fn();
-					timeout = null;
-				}
-				setTimeout(delayed, threshold || 100);
+				clearTimeout(timeout);
+				timeout = setTimeout(fn, threshold || 100);
 			};
 		}
 
-		// Reset filters
+		// Reset semua filter
 		$('.isotope-reset').on('click', function () {
 			qsRegex = '';
 			filterValue = '';
 
 			$('#search').val('');
-			$('#category').prop('selectedIndex', 0).niceSelect('update');;
+			$('#category').prop('selectedIndex', 0).niceSelect('update');
 
 			$grid.isotope();
-
 		});
 	}
+
 
 	// =====================================================
 	// MOBILE MENU
 	// =====================================================
 	var $menu = $("nav#menu").mmenu({
-		"extensions": ["pagedim-black", "theme-white"], // "theme-dark" can be changed to: "theme-dark"
+		"extensions": ["pagedim-black", "theme-white"], 
 		counters: true,
 		keyboardNavigation: {
 			enable: true,
@@ -275,6 +266,12 @@
 		$.magnificPopup.close();
 	});
 
+	$('.btn-confirm-delete').on('click', function () {
+		const cartId = $('#modalConfirmDeleteCart').data('cart-id');
+		deleteCartItem(cartId);
+		$.magnificPopup.close();
+	});
+
 	// =====================================================
 	// INIT DROPDOWNS
 	// =====================================================
@@ -318,20 +315,53 @@
 	// =====================================================
 	// HELPER FUNCTIONS
 	// =====================================================
-
-	// Function to format item prices usign priceFormat plugin
-	function formatPrice() {
-		$('.format-price').priceFormat({
-			prefix: 'Rp ',
-			centsSeparator: ',',
-			thousandsSeparator: '.',
-			centsLimit: 0
-		});
-	}
 	
 	function formatRupiah(angka) {
 		return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 	}
+
+	// Load zona ke select
+	function loadDeliveryZones() {
+		$.getJSON('endpoint/ajax/get_delivery_zones.php', function(res) {
+			if (res.status === 'ok') {
+				const $zone = $('#deliveryZone');
+				$zone.empty();
+				$zone.append(`<option value="">-- Select Zone --</option>`);
+				res.data.forEach(z => {
+					$zone.append(`<option value="${z.id}" data-fee="${z.fee}">${z.label} - ${formatRupiah(z.fee)}</option>`);
+				});
+			}
+		});
+	}
+
+	// Update total jika zona berubah
+	$('#deliveryZone').on('change', function () {
+		const selectedFee = $('option:selected', this).data('fee') || 0;
+		const productTotal = parseInt($('.total').val()) || 0;
+
+		const newTotal = productTotal + selectedFee;
+		$('.totalValue').text(formatRupiah(newTotal));
+		$('#totalOrderSummary').val(newTotal);
+	});
+
+	// Sembunyikan/ tampilkan zona jika metode bukan delivery
+	$('#shippingMethod').on('change', function () {
+		const val = $(this).val();
+		if (val === 'delivery') {
+			$('#zoneContainer').show();
+		} else {
+			$('#zoneContainer').hide();
+			$('#deliveryZone').val('');
+			// Reset total jadi hanya produk
+			const base = parseInt($('.total').val()) || 0;
+			$('.totalValue').text(formatRupiah(base));
+			$('#totalOrderSummary').val(base);
+		}
+	});
+
+	$(document).ready(function () {
+		loadDeliveryZones();
+	});
 
 	function loadCartItems() {
 		$.getJSON('endpoint/ajax/get_cart_items.php', function(response) {
@@ -388,11 +418,20 @@
 
 				// Attach events
 				attachCartEvents();
+
 			}
+				if (typeof response.total_products_price !== 'undefined') {
+					const deliveryOption = $('input[name="transfer"]:checked').val();
+					const deliveryFee = deliveryOption === 'delivery' ? 10000 : 0;
+					const total = response.total_products_price + deliveryFee;
+		
+					$('.total').val(total);
+					$('.totalValue').text(formatRupiah(total));
+					$('#totalOrderSummary').val(total);
+				}
 		});
 	}
-
-
+ 
 	function attachCartEvents() {
 		// Tambah qty
 		$('.qtyplus').off().on('click', function () {
@@ -402,7 +441,7 @@
 			if (currentQty < 10) {
 				updateCartQuantity(cartId, currentQty + 1);
 			} else {
-				alert('Maksimal pembelian hanya 10 per produk.');
+				callWarningPopup('#modalWarningQtyMaxLimit');
 			}
 		});
 
@@ -414,18 +453,17 @@
 			if (currentQty > 1) {
 				updateCartQuantity(cartId, currentQty - 1);
 			} else {
-				if (confirm('Apakah Anda ingin menghapus produk dari keranjang?')) {
-					deleteCartItem(cartId);
-				}
+				$('#modalWarningQtyMinLimit').data('cart-id', cartId);
+				callWarningPopup('#modalWarningQtyMinLimit');
 			}
 		});
 
-		// Hapus item langsung
+		// Hapus item langsung (pakai modal)
 		$('.delete-cart').off().on('click', function () {
 			const cartId = $(this).data('id');
-			if (confirm('Yakin ingin menghapus item ini dari keranjang?')) {
-				deleteCartItem(cartId);
-			}
+			// Simpan cart ID ke modal agar bisa dipakai saat konfirmasi
+			$('#modalConfirmDeleteCart').data('cart-id', cartId);
+			callWarningPopup('#modalConfirmDeleteCart');
 		});
 	}
 
@@ -456,6 +494,11 @@
 
 	$(document).ready(function() {
 		loadCartItems();
+		
+		$('input[name="transfer"]').on('change', function () {
+			updateTotal();
+		});
+
 	});
 
 	// Function to reset total price
@@ -487,7 +530,7 @@
 		});
 	}
 
-	// Function to show a popup essage that item is added to cart
+	// Function to show a popup message that item is added to cart
 	function showItemAddedMessage() {
 
 		// Only show this message when there is no popup opened
@@ -505,107 +548,31 @@
 		}
 	}
 
-	// Function to show a popup message that item is added to cart
-	function showItemAlreadyInCartMessage() {
-
-		// Only show this message when there is no popup opened
-		if (!$.magnificPopup.instance.isOpen) {
-
-			// Show already in cart message
-			$('.alreadyInCartMsg').fadeIn('slow', function () {
-				$('.alreadyInCartMsg').fadeOut();
-			});
-
-		} else if ($.magnificPopup.instance.isOpen) { // Only show this
-			// message when a popup
-			// is opened
-			$('.alreadyInCartMsgInModal').fadeIn('slow', function () {
-				$('.alreadyInCartMsgInModal').fadeOut();
-			});
-		}
-	}
 
 	// Function to validate total price
 	function validateTotal() {
 		$('#totalOrderSummary').parsley().validate();
 	}
 
-	// =====================================================
-	// CART FUNCTIONS
-	// =====================================================
-	var id = '';
-	var rowId = '';
-	var size = '';
-	var thumbnailPath = '';
-	var itemTitle = '';
-	var description = '';
-	var itemPrice = '';
-	var extraTitle = '';
-	var extraPrice = '';
-	var extraIsChecked = false;
-	var qtyInput = 0;
-	var actualQty = 0;
-	var maxQty = 10;
-	var subSum = 0;
-	var deliveryFee = 10;
-	var total = 0;
-
-	// Function to set empty cart image
-	function setEmptyCart() {
-
-		// Create the dedicated row for the empty cart element
-		$('#itemList').append('<li id="emptyCart"></li>');
-
-		// Fill the dedicated row
-		$('#emptyCart').html('<div class="order-list-img"><img src="../img/bg/empty-cart-small.png" alt="Your cart is empty"/></div><div class="order-list-details"> <h4>Your cart is empty</a><br/><small>Start adding items</small></h4> <div class="order-list-price format-price">0.00</div></div>');
-		formatPrice();
-	}
-
-	// Function to check if the cart is empty
-	function isCartEmpty() {
-
-		if ($('ul#itemList li').length == 0) {
-			return true;
-		}
-	}
-
-	// Function to update sub summary
-	function updateSubSum(id, rowId, itemPrice, actualQty) {
-
-		// Calculate subSum
-		subSum = (itemPrice * 1) * (actualQty * 1);
-
-		// Update subSum
-		$('#cartItem' + id + rowId + ' .order-list-details .order-list-price').text(subSum.toFixed(2));
-	}
-
 	// Function to update total summary
 	function updateTotal() {
+		let total = 0;
 
-		total = 0;
-
-		// Update total with prices in order list
+		// Jumlahkan semua harga produk
 		$('.order-list-price').each(function () {
-
-			total += ($(this).text().match(/[0-9.]+/g) * 1);
-
+			const hargaItem = parseInt($(this).text().replace(/[^\d]/g, '')) || 0;
+			total += hargaItem;
 		});
-		//Add delivery fee
-		total = total + (deliveryFee * 1);
 
-		// Set total
-		$('.total').val(total.toFixed(2));
-		$('.totalValue').text(total.toFixed(2));
+		// Ambil metode pengiriman
+		const deliveryOption = $('input[name="transfer"]:checked').val();
+		const deliveryFee = deliveryOption === 'delivery' ? 10000 : 0;
+		total += deliveryFee;
 
-		// If cart is empty do not calculate any cost
-		if ($('ul#itemList li#emptyCart').length > 0) {
-			total = 0;
-			$('.total').val(total.toFixed(2));
-			$('.totalValue').text(total.toFixed(2));
-		}
-
-		formatPrice();
-
+		// Update tampilan total
+		$('.total').val(total);
+		$('.totalValue').text(formatRupiah(total));
+		$('#totalOrderSummary').val(total);
 	}
 
 	// Item having options is added to cart
@@ -626,7 +593,7 @@
 		}
 
 		if (!optionId) {
-			alert('Ukuran produk belum dipilih!');
+			callWarningPopup('Ukuran produk belum dipilih!');
 			return;
 		}
 
@@ -640,14 +607,19 @@
 				extra_ids: extraIds,
 				quantity: 1
 			},
-			traditional: true, // ⬅️ penting agar extra_ids[] tidak dikirim sebagai object nested
+			traditional: true,
 			dataType: 'json',
 			success: function (res) {
-				if (res.status === 'success' || res.status === 'ok') {
-					alert(res.message || 'Produk berhasil ditambahkan ke keranjang!');
+				if (res.status === 'success') {
+					showItemAddedMessage();
 					loadCartItems();
-				} else {
-					alert(res.message || 'Gagal menambahkan ke keranjang');
+				}  else if (res.status === 'error') {
+					if (res.message === 'Quantity maximum limit is: 10 !') {
+						callWarningPopup('#modalWarningQtyMaxLimit');
+					} else {
+						$('#modalWarningGeneric .warning-text').text(res.message);
+						callWarningPopup('#modalWarningGeneric');
+					}
 				}
 			},
 			error: function (xhr, status, error) {
