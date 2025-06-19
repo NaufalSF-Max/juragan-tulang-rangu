@@ -24,7 +24,7 @@ function isActive($page) {
             </a>
         </li>
         <li>
-            <a href="product_option_manage.php" class="nav-link <?= isActive('product_option.php') ?>">
+            <a href="product_variants_manage.php" class="nav-link <?= isActive('product_option.php') ?>">
                 <i class="fas fa-tags me-2"></i> Product Variants
             </a>
         </li>
