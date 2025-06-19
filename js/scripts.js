@@ -28,17 +28,6 @@
 	});
 
 	// =====================================================
-	// LAZY LOAD
-	// =====================================================
-	if ($('.lazy').length > 0) {
-
-		new LazyLoad({
-			elements_selector: '.lazy'
-		});
-
-	}
-
-	// =====================================================
 	// BACK TO TOP BUTTON
 	// =====================================================
 	function scrollToTop() {
@@ -96,12 +85,10 @@
 
 		// Prevent moving forward if total is zero
 		beforeForward: function (event, state) {
-
-			if ($('.total').val() == '$ 0.00') {
+			if ($('.total').val() == 'Rp 0') {
 				validateTotal();
 				return false; // prevent moving forward
 			}
-
 		},
 
 		// Reset validation and remove error notifications from the form
@@ -192,7 +179,7 @@
 		},
 		navbars: [{
 			position: 'bottom',
-			content: ['<a href="#">© 2021 FoodBoard</a>']
+			content: ['<a href="#">© 2025 Juragan Tulang Rangu Karawang</a>']
 		}]
 	}, {
 		// configuration
@@ -261,7 +248,7 @@
 	// MODAL
 	// =====================================================
 	function resetModalOptions() {
-		$(':radio[value="Medium: 32cm"]').prop('checked', true);
+		$(':radio[value="Medium"]').prop('checked', true);
 		$('.modal-popup .inp-cbx').prop('checked', false);
 	}
 
@@ -279,16 +266,13 @@
 		mainClass: 'my-mfp-zoom-in',
 		callbacks: {
 			close: function () {
-				resetModalOptions();
+			resetModalOptions();
 			}
 		}
-
 	});
 
 	$('.btn-modal-close').on('click', function () {
-
 		$.magnificPopup.close();
-
 	});
 
 	// =====================================================
@@ -317,7 +301,7 @@
 	// Add custom empty order validation
 	window.Parsley.addValidator('emptyOrder', {
 		validateString: function (value) {
-			return value !== '$ 0.00';
+			return value !== 'Rp 0';
 		},
 		messages: {
 			en: 'Order is empty.'
@@ -338,17 +322,147 @@
 	// Function to format item prices usign priceFormat plugin
 	function formatPrice() {
 		$('.format-price').priceFormat({
-			prefix: '$ ',
-			centsSeparator: '.',
-			thousandsSeparator: ','
+			prefix: 'Rp ',
+			centsSeparator: ',',
+			thousandsSeparator: '.',
+			centsLimit: 0
 		});
 	}
+	
+	function formatRupiah(angka) {
+		return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+	}
+
+	function loadCartItems() {
+		$.getJSON('endpoint/ajax/get_cart_items.php', function(response) {
+			const itemList = $('#itemList');
+			itemList.empty();
+
+			if (response.status === 'ok') {
+				const items = response.data;
+
+				if (items.length === 0) {
+					itemList.append(`
+						<li id="emptyCart">
+							<div class="order-list-img"><img src="../img/bg/empty-cart-small.png" alt="Empty Cart"/></div>
+							<div class="order-list-details">
+								<h4>Your cart is empty<br/><small>Start adding items</small></h4>
+								<div class="order-list-price format-price">Rp 0</div>
+							</div>
+						</li>
+					`);
+				} else {
+					items.forEach(item => {
+						// Total harga = base + semua harga extra
+						let totalPrice = item.price;
+						if (Array.isArray(item.extras)) {
+							item.extras.forEach(extra => {
+								totalPrice += extra.price;
+							});
+						}
+
+						const subTotal = totalPrice * item.quantity;
+
+						let extrasText = '';
+						if (item.extras && item.extras.length > 0) {
+							extrasText = '<br/><small>Extra: ' + item.extras.map(e => e.variant).join(', ') + '</small>';
+						}
+
+						itemList.append(`
+							<li id="cartItem${item.cart_id}">
+								<div class="order-list-img"><img src="${item.image}" alt=""></div>
+								<div class="order-list-details">
+									<h4>${item.name}<br/><small>Size: ${item.variant}</small>${extrasText}</h4>
+									<div class="qty-buttons">
+										<input type="button" value="+" class="qtyplus" data-id="${item.cart_id}" data-qty="${item.quantity}">
+										<input type="text" name="qty" value="${item.quantity}" class="qty form-control" readonly>
+										<input type="button" value="-" class="qtyminus" data-id="${item.cart_id}" data-qty="${item.quantity}">
+									</div>
+									<div class="order-list-price format-price">${formatRupiah(subTotal)}</div>
+									<div class="order-list-delete"><a href="javascript:;" class="delete-cart" data-id="${item.cart_id}"><i class="icon icon-trash"></i></a></div>
+								</div>
+							</li>
+						`);
+					});
+				}
+
+				// Attach events
+				attachCartEvents();
+			}
+		});
+	}
+
+
+	function attachCartEvents() {
+		// Tambah qty
+		$('.qtyplus').off().on('click', function () {
+			const cartId = $(this).data('id');
+			let currentQty = parseInt($(this).data('qty'));
+
+			if (currentQty < 10) {
+				updateCartQuantity(cartId, currentQty + 1);
+			} else {
+				alert('Maksimal pembelian hanya 10 per produk.');
+			}
+		});
+
+		// Kurangi qty
+		$('.qtyminus').off().on('click', function () {
+			const cartId = $(this).data('id');
+			let currentQty = parseInt($(this).data('qty'));
+
+			if (currentQty > 1) {
+				updateCartQuantity(cartId, currentQty - 1);
+			} else {
+				if (confirm('Apakah Anda ingin menghapus produk dari keranjang?')) {
+					deleteCartItem(cartId);
+				}
+			}
+		});
+
+		// Hapus item langsung
+		$('.delete-cart').off().on('click', function () {
+			const cartId = $(this).data('id');
+			if (confirm('Yakin ingin menghapus item ini dari keranjang?')) {
+				deleteCartItem(cartId);
+			}
+		});
+	}
+
+	function updateCartQuantity(cartId, newQty) {
+		$.post('endpoint/ajax/update_cart_quantity.php', {
+			cart_id: cartId,
+			quantity: newQty
+		}, function (res) {
+			if (res.status === 'success') {
+				loadCartItems();
+			} else {
+				alert('Gagal memperbarui kuantitas.');
+			}
+		}, 'json');
+	}
+
+	function deleteCartItem(cartId) {
+		$.post('endpoint/ajax/delete_cart_item.php', {
+			cart_id: cartId
+		}, function (res) {
+			if (res.status === 'success') {
+				loadCartItems();
+			} else {
+				alert('Gagal menghapus item.');
+			}
+		}, 'json');
+	}
+
+	$(document).ready(function() {
+		loadCartItems();
+	});
 
 	// Function to reset total price
 	function resetTotal() {
 
 		$('.totalTitle').val('Total');
-		$('.total').val('0.00');
+		$('.total').val('0');
 		formatPrice();
 
 	}
@@ -391,7 +505,7 @@
 		}
 	}
 
-	// Function to show a popup essage that item is added to cart
+	// Function to show a popup message that item is added to cart
 	function showItemAlreadyInCartMessage() {
 
 		// Only show this message when there is no popup opened
@@ -443,7 +557,7 @@
 		$('#itemList').append('<li id="emptyCart"></li>');
 
 		// Fill the dedicated row
-		$('#emptyCart').html('<div class="order-list-img"><img src="../img/bg/empty-cart-small.jpg" alt="Your cart is empty"/></div><div class="order-list-details"> <h4>Your cart is empty</a><br/><small>Start adding items</small></h4> <div class="order-list-price format-price">0.00</div></div>');
+		$('#emptyCart').html('<div class="order-list-img"><img src="../img/bg/empty-cart-small.png" alt="Your cart is empty"/></div><div class="order-list-details"> <h4>Your cart is empty</a><br/><small>Start adding items</small></h4> <div class="order-list-price format-price">0.00</div></div>');
 		formatPrice();
 	}
 
@@ -494,320 +608,53 @@
 
 	}
 
-	// Function to insert item into its dedicated cart row based on: id, rowId, itemSubtitle, thumbnailPath, itemTitle, extraTitle, itemPrice
-	function insertItemIntoCartRow(id, rowId, itemSubtitle, thumbnailPath, itemTitle, extraTitle, itemPrice) {
-
-		// Create the dedicated row for the cart element
-		$('#itemList').append('<li id="cartItem' + id + rowId + '"></li>');
-
-		// Insert item into its dedicated row in the cart
-		$('#cartItem' + id + rowId).html('<div class="order-list-img"><img src="' + thumbnailPath + '" alt=""></div><div class="order-list-details"><h4>' + itemTitle + '<br/> <small>' + itemSubtitle + extraTitle + '</small> </h4> <div class="qty-buttons"> <input type="button" value="+" class="qtyplus" name="plus"> <input type="text" name="qty" value="1" class="qty form-control"> <input type="button" value="-" class="qtyminus" name="minus"> </div><div class="order-list-price format-price">' + itemPrice.toFixed(2) + '</div><div class="order-list-delete"><a href="javascript:;" id="deleteCartItem' + id + rowId + '"><i class="icon icon-trash"></i></a></div></div>');
-
-		// Handle if an added item will be deleted
-		$('#deleteCartItem' + id + rowId).on('click', function () {
-
-			// Fade out the deleted item
-			$('#cartItem' + id + rowId).fadeOut('slow', function () {
-
-				// Remove item from cart
-				$('#cartItem' + id + rowId).remove();
-
-				// Handle if cart is empty
-				if (isCartEmpty()) {
-					setEmptyCart();
-				}
-
-				// Update total
-				updateTotal();
-
-			});
-		});
-
-		// Handle qty plus
-		$('#cartItem' + id + rowId + ' .order-list-details .qty-buttons .qtyplus').on('click', function () {
-
-			qtyInput = $(this).parent('.qty-buttons').find('.qty');
-			actualQty = parseInt(qtyInput.val(), 10);
-
-			// If qty number is less than the max.limit
-			if (actualQty < maxQty) {
-
-				// Increment
-				qtyInput.val(actualQty + 1);
-				actualQty = qtyInput.val();
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, actualQty); // actualQty is the increased value
-
-				// Update total
-				updateTotal();
-
-			} else {
-				// Warning popup
-				callWarningPopup('#modalWarningQtyMaxLimit');
-			}
-		});
-
-		// Handle qty minus
-		$('#cartItem' + id + rowId + ' .order-list-details .qty-buttons .qtyminus').on('click', function () {
-
-			qtyInput = $(this).parent('.qty-buttons').find('.qty');
-			actualQty = parseInt(qtyInput.val(), 10);
-
-			if (actualQty > 1) {
-
-				// Decrement
-				qtyInput.val(actualQty - 1);
-				actualQty = qtyInput.val();
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, actualQty); // actualQty is the decreased value
-
-				// Calculate total
-				updateTotal();
-
-			} else {
-				// Warning popup
-				callWarningPopup('#modalWarningQtyMinLimit');
-			}
-		});
-
-		// Validation of quantity inputs: min and max limit handling on keyup
-		$('#cartItem' + id + rowId + ' .order-list-details .qty-buttons .qty').on('keyup', function () {
-
-			// If qty number is more than the max.limit
-			if ($(this).val() > maxQty) {
-
-				// Warning popup
-				callWarningPopup('#modalWarningQtyMaxLimit');
-
-				// Set max limit into input
-				$(this).val(maxQty);
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, maxQty); // actualQty is the maxQty
-
-				// Update total
-				updateTotal();
-
-			} else if ($(this).val() < 1) { // If qty number is less
-				// than the min.limit
-
-				// Warning popup
-				callWarningPopup('#modalWarningQtyMinLimit');
-
-				// Set min limit into input
-				$(this).val(1);
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, 1); // actualQty is
-				// 1
-
-				// Update total
-				updateTotal();
-
-			} else {
-
-				// Get actual quantity
-				actualQty = parseInt($(this).val(), 10);
-
-				// Update subSum
-				updateSubSum(id, rowId, itemPrice, actualQty); // actualQty is the retrieved qty
-
-				// Update total
-				updateTotal();
-			}
-
-		});
-
-		// Validation of quantity inputs: exclude letters and spec chars on keypress
-		$('.qty').on('keypress', function (event) {
-			if (event.which != 8 && isNaN(String.fromCharCode(event.which))) {
-				event.preventDefault();
-			}
-		});
-
-		// Update total
-		updateTotal();
-
-		// Show item is added into the cart message
-		showItemAddedMessage(id);
-
-	}
-
-	// Function to add item into cart
-	function addOptionsItemToCart(id) {
-
-		// Remove empty cart image and notifications
-		$('#emptyCart').remove();
-
-		// Collect item data
-		size = $('input[name="size-options-item-' + id + '"]:checked').val();
-
-		itemTitle = $('#gridItem' + id + ' .item-title h3').text();
-		itemPrice = $('input[name="size-options-item-' + id + '"]:checked').nextAll('.option-price').text();
-		itemPrice = (itemPrice.match(/[0-9.]+/g)) * 1; // Find digits, dot and convert to number
-
-		extraIsChecked = $('#item' + id + 'Extra').is(':checked');
-		extraTitle = $('#item' + id + 'ExtraTitle').val();
-		extraPrice = ($('#item' + id + 'Extra').val()) * 1; // Find digits, dot and convert to number
-
-		thumbnailPath = '../img/gallery/grid-items-small/' + id + '.jpg';
-
-		// Capture row where the item will be inserted
-		if (size == 'Small: 26cm') {
-
-			// If extra is NOT checked
-			if (!extraIsChecked) {
-
-				rowId = 'S';
-				extraTitle = '';
-
-				// Check if item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-
-				}
-
-			} else if (extraIsChecked) { // If extra is checked
-
-				rowId = 'SExtra';
-				extraTitle = ', ' + extraTitle;
-				itemPrice += extraPrice;
-
-				// Check if extra item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-			}
-		}
-		if (size == 'Medium: 32cm') {
-
-			// If extra is NOT checked
-			if (!extraIsChecked) {
-
-				rowId = 'M';
-				extraTitle = '';
-
-				// Check if item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-
-			} else if (extraIsChecked) { // If extra is checked
-
-				rowId = 'MExtra';
-				extraTitle = ', ' + extraTitle;
-				itemPrice += extraPrice;
-
-				// Check if extra item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-			}
-		}
-		if (size == 'Large: 45cm') {
-
-			// If extra is NOT checked
-			if (!extraIsChecked) {
-
-				rowId = 'L';
-				extraTitle = '';
-
-				// Check if item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-
-			} else if (extraIsChecked) { // If extra is checked
-
-				rowId = 'LExtra';
-				extraTitle = ', ' + extraTitle;
-				itemPrice += extraPrice;
-
-				// Check if extra item already exists in cart or not
-				if ($('#cartItem' + id + rowId).length > 0) {
-
-					showItemAlreadyInCartMessage();
-
-				} else { // If not: put it into the cart
-
-					insertItemIntoCartRow(id, rowId, size, thumbnailPath, itemTitle, extraTitle, itemPrice);
-				}
-			}
-		}
-	}
-
-	// Function to add item into cart
-	function addItemToCart(id) {
-
-		// Remove empty cart image and notifications
-		$('#emptyCart').remove();
-
-		// Collect and set item data
-		rowId = '';
-		extraTitle = '';
-		description = $('#gridItem' + id + ' .item-title small').text();
-
-		itemTitle = $('#gridItem' + id + ' .item-title h3').text();
-		itemPrice = $('#gridItem' + id + ' .item-price').text();
-		itemPrice = (itemPrice.match(/[0-9.]+/g)) * 1; // Find digits, dot and convert to number
-
-		thumbnailPath = '../img/gallery/grid-items-small/' + id + '.jpg';
-
-		// Check if item already exists in cart or not
-		if ($('#cartItem' + id + rowId).length > 0) {
-
-			showItemAlreadyInCartMessage();
-
-		} else { // If not: put it into the cart
-
-			insertItemIntoCartRow(id, rowId, description, thumbnailPath, itemTitle, extraTitle, itemPrice);
-
-		}
-	}
-
 	// Item having options is added to cart
-	$('.add-options-item-to-cart').on('click', function () {
+	$(document).on('click', '.add-options-item-to-cart', function () {
+		const $btn = $(this);
+		const productId = $btn.data('product-id');
+		let optionId = $btn.data('option-id') || null;
+		let extraIds = [];
 
-		id = $(this).parent().parent().parent().parent().attr('id').match(/\d+/);
-		addOptionsItemToCart(id);
-		validateTotal();
+		// Cek apakah dari modal
+		const $sizeInput = $(`input[name="size-options-item-${productId}"]:checked`);
+		if ($sizeInput.length > 0) {
+			optionId = $sizeInput.val();
+			extraIds = $(`input[name="extra-options-item-${productId}[]"]:checked`)
+				.map(function () {
+					return $(this).val();
+				}).get();
+		}
 
-	});
+		if (!optionId) {
+			alert('Ukuran produk belum dipilih!');
+			return;
+		}
 
-	// Pure item without options is added to cart
-	$('.add-item-to-cart').on('click', function () {
-
-		id = $(this).parent().parent().parent().parent().attr('id').match(/\d+/);
-		addItemToCart(id);
-		validateTotal();
-
+		// Kirim request
+		$.ajax({
+			url: 'endpoint/ajax/add_to_cart.php',
+			method: 'POST',
+			data: {
+				product_id: productId,
+				option_id: optionId,
+				extra_ids: extraIds,
+				quantity: 1
+			},
+			traditional: true, // ⬅️ penting agar extra_ids[] tidak dikirim sebagai object nested
+			dataType: 'json',
+			success: function (res) {
+				if (res.status === 'success' || res.status === 'ok') {
+					alert(res.message || 'Produk berhasil ditambahkan ke keranjang!');
+					loadCartItems();
+				} else {
+					alert(res.message || 'Gagal menambahkan ke keranjang');
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error('AJAX Error:', xhr.responseText);
+				alert('Gagal menghubungi server');
+			}
+		});
 	});
 
 	setEmptyCart();
