@@ -32,3 +32,22 @@
 [2025-06-19 20:59:42] VALUES DEBUG: ["INV\/20250619\/0004","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn","cepet datang","COD","Delivery",0,36000,6]
 [2025-06-19 20:59:43] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
 [2025-06-19 21:07:39] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:09:03] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:09:03] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:09:03] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:09:03] VALUES DEBUG: ["INV\/20250619\/0005","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","cepet dateng bang","COD","Delivery",0,24000,10]
+[2025-06-19 21:09:04] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:12:01] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:12:01] ✅ Zona ditemukan: Tambun Selatan, Bekasi, Fee: 17000
+[2025-06-19 21:12:01] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:12:01] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:12:01] VALUES DEBUG: ["INV\/20250619\/0006","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta - Zone: Tambun Selatan Bekasi","cepet dateng bang","COD","Delivery",17000,41000,10]
+[2025-06-19 21:12:01] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:19:21] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:19:21] ✅ Zona ditemukan: Jakarta Barat, Jakarta, Fee: 25000
+[2025-06-19 21:19:21] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:19:21] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:19:21] VALUES DEBUG: ["INV\/20250619\/0007","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Jakarta Barat Jakarta","cepet datang","COD","Delivery",25000,169000,15]
+[2025-06-19 21:19:22] UltraMsg Response: {"sent":"true","message":"ok","id":2}
+[2025-06-19 21:19:22] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:19:22] ✅ Zona ditemukan: Jakarta Barat, Jakarta, Fee: 25000

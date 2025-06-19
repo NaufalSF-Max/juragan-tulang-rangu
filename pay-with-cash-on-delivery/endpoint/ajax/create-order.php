@@ -44,16 +44,22 @@ $delivery_zone_id = isset($_POST['delivery_zone']) ? (int)$_POST['delivery_zone'
 $payment_method = $_POST['payment_method'];
 
 // Ambil fee zona dari DB
-$delivery_fee = 0;
-if ($delivery_method === 'delivery' && $delivery_zone_id) {
-	$stmt = $conn->prepare("SELECT fee, name, city FROM delivery_zones WHERE id = ?");
+$delivery_fee = 0; // default jika pickup atau tidak pilih zona
+
+if ($delivery_method === 'Delivery' && $delivery_zone_id) {
+    $stmt = $conn->prepare("SELECT fee, name, city FROM delivery_zones WHERE id = ?");
     $stmt->bind_param("i", $delivery_zone_id);
     $stmt->execute();
     $stmt->bind_result($delivery_fee, $zone_name, $zone_city);
-    $stmt->fetch();
-    $stmt->close();
 
-    $address .= " - Zone: $zone_name $zone_city";
+    if ($stmt->fetch()) {
+        $address .= " - Zone: $zone_name $zone_city";
+        log_error("✅ Zona ditemukan: $zone_name, $zone_city, Fee: $delivery_fee");
+    } else {
+        log_error("❌ Gagal fetch zona ID $delivery_zone_id");
+    }
+
+    $stmt->close();
 }
 
 // Ambil isi cart
@@ -177,44 +183,47 @@ if (substr($phoneIntl, 0, 2) !== '62') {
 }
 
 // Format isi pesan WhatsApp
-$waMessage  = "📦 [PESANAN SEDANG DIPROSES]\n";
-$waMessage .= "Hai $buyerName! Terima kasih telah melakukan pemesanan 🙏\n";
+$waMessage  = "📦 *[PESANAN SEDANG DIPROSES]*\n";
+$waMessage .= "Hai *$buyerName*! Terima kasih telah melakukan pemesanan 🙏\n";
 $waMessage .= "Pesanan kamu saat ini sedang kami proses dengan penuh perhatian 💼✨\n\n";
 
-$waMessage .= "🧾 INVOICE PEMESANAN\n";
-$waMessage .= "Berikut detail pesanan kamu:\n\n";
+$waMessage .= "🧾 *INVOICE PEMESANAN*\n";
+$waMessage .= "📌 Nomor Transaksi: *$transactionId*\n\n";
 
-$waMessage .= "👤 Nama Pembeli:\n$buyerName\n\n";
-$waMessage .= "🏠 Alamat Pengiriman:\n$address\n\n";
-$waMessage .= "💬 Pesan dari Pembeli:\n\"$buyerNote\"\n\n";
-$waMessage .= "🛒 Detail Pesanan:\n";
+$waMessage .= "👤 *Nama Pembeli:*\n$buyerName\n\n";
+$waMessage .= "🏠 *Alamat Pengiriman:*\n$address\n\n";
+$waMessage .= "💬 *Catatan Pembeli:*\n\"$buyerNote\"\n\n";
+$waMessage .= "🛍️ *Metode Pembayaran:* $payment_method\n";
+$waMessage .= "🚚 *Metode Pengiriman:* $delivery_method\n\n";
+
+$waMessage .= "🍱 *Detail Pesanan:*\n";
 
 $subtotal = 0;
 foreach ($items as $item) {
-	$productName = $item['name'];
-	$qty = $item['quantity'];
-	$price = $item['price'];
-	$lineTotal = $qty * $price;
-	$subtotal += $lineTotal;
-	$waMessage .= "$productName x$qty = Rp" . number_format($lineTotal, 0, ',', '.') . "\n";
+    $productName = $item['name'];
+    $qty = $item['quantity'];
+    $price = $item['price'];
+    $lineTotal = $qty * $price;
+    $subtotal += $lineTotal;
+    $waMessage .= "- $productName x$qty = Rp" . number_format($lineTotal, 0, ',', '.') . "\n";
 }
 
-$waMessage .= "\n💰 Subtotal:\nRp" . number_format($subtotal, 0, ',', '.') . "\n";
-$waMessage .= "🚚 Ongkos Kirim:\nRp" . number_format($ongkir, 0, ',', '.') . "\n";
-$waMessage .= "🧮 Total Pembayaran:\nRp" . number_format($subtotal + $ongkir, 0, ',', '.') . "\n\n";
+$waMessage .= "\n💰 *Subtotal Produk:*\nRp " . number_format($subtotal, 0, ',', '.') . "\n";
+$waMessage .= "📦 *Ongkos Kirim:*\nRp " . number_format($ongkir, 0, ',', '.') . "\n";
+$waMessage .= "🧮 *Total Pembayaran:*\n*Rp " . number_format($subtotal + $ongkir, 0, ',', '.') . "*\n\n";
 
-$waMessage .= "🙏 Terima kasih sudah memesan di toko kami!\n";
-$waMessage .= "Kami sangat menghargai kepercayaan kamu 💖\n\n";
+$waMessage .= "🙏 Terima kasih telah berbelanja di toko kami 💖\n";
+$waMessage .= "Pesananmu akan segera kami antar sesuai informasi di atas 🚀\n\n";
 
-$waMessage .= "📱 Jangan lupa untuk pantau terus sosial media kami ya, karena akan ada banyak promo menarik, info produk baru, dan giveaway seru! 🎉\n";
-$waMessage .= "🔍 IG: @namatoko | TikTok: @namatoko | FB: Nama Toko\n\n";
+$waMessage .= "📱 *Ikuti kami di sosial media:*\n";
+$waMessage .= "🔍 IG: @tulangrangu_karawang\n📘 Email: tulangrangukarawang@gmail.com\n\n";
 
-$waMessage .= "💬 Bila ada pertanyaan, jangan ragu untuk menghubungi kami. Kami siap membantu kamu sebaik mungkin 🤗\n\n";
-$waMessage .= "🌟 Semoga harimu menyenangkan dan pesanan kamu memuaskan! 🌟";
+$waMessage .= "❓ Jika ada pertanyaan, silakan hubungi kami kapan saja.\n";
+$waMessage .= "🌟 Semoga harimu menyenangkan dan pesananmu memuaskan! 🌟";
 
 // Kirim ke UltraMsg
 $params = array(
-	// 'token' => '67h0ks2kaofqoanl', // Ganti dengan token kamu
+	'token' => '67h0ks2kaofqoanl', // Ganti dengan token kamu
 	'to' => $phoneIntl,
 	'body' => $waMessage
 );
