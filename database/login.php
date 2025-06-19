@@ -82,6 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,40 +100,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap");
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Roboto", sans-serif; }
+    * {margin: 0; padding: 0; box-sizing: border-box; font-family: "Roboto", sans-serif; }
     body {
       background-color: #ddd;
-    }
-    body::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0.5;
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-      /* background: url("../img/bg/bg-1.svg") center/cover no-repeat; */
-    }
-    nav {
-      position: fixed;
-      padding: 25px 60px;
-      z-index: 1;
-    }
-    nav a img {
-      width: 167px;
     }
     .form-wrapper {
       position: absolute;
       left: 50%;
       top: 50%;
       border-radius: 4px;
-      padding: 70px;
+      padding: 60px;
       width: 450px;
       transform: translate(-50%, -50%);
       background: rgba(0, 0, 0, 0.75);
       z-index: 2;
       box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.5);
+    }
+    .form-wrapper h1 {
+      padding: 0 ;
+      color:rgb(255, 32, 43);
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 40px;
     }
     .form-wrapper h2 {
       color: #fff;
@@ -170,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .form-control input:focus + label,
     .form-control input:valid + label {
       font-size: 0.75rem;
-      transform: translateY(-130%);
+      transform: translateY(-160%);
     }
     button {
       width: 100%;
@@ -268,6 +257,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         transform: translateY(0);
       }
     }
+    @media (max-width: 768px) {
+      .form-wrapper {
+        width: 90%;
+        padding: 40px 20px;
+      }
+
+      .form-wrapper h2 {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+
+      .form-control input {
+        font-size: 0.9rem;
+        padding: 0 15px;
+      }
+
+      .form-control label {
+        font-size: 0.9rem;
+        left: 15px;
+      }
+
+      button {
+        font-size: 0.95rem;
+        padding: 14px 0;
+      }
+
+      .form-help {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 0.85rem;
+      }
+
+      #popup .popup-content {
+        width: 90%;
+        padding: 25px 15px;
+      }
+
+      #popup .popup-content h3 {
+        font-size: 1.25rem;
+      }
+
+      #popup .popup-content p {
+        font-size: 0.95rem;
+      }
+
+      #popup .popup-content button {
+        font-size: 0.95rem;
+        padding: 10px 16px;
+      }
+    }
 
   </style>
 </head>
@@ -281,6 +321,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <div class="form-wrapper">
+  <h1>Welcome back</h1>
   <h2>Sign In</h2>
   <form method="POST" action="login.php">
     <div class="form-control">
@@ -294,13 +335,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button type="submit">Sign In</button>
     <div class="form-help">
       <div class="remember-me">
-        <input type="checkbox" id="remember-me" name="remember_me">
+        <input type="checkbox" id="remember-me">
         <label for="remember-me">Remember me</label>
       </div>
-      <a href="#">Need help?</a>
+      <a href="../faq.html">Need help?</a>
     </div>
   </form>
-  <p>New to Account? <a href="../database/register.php">Sign up now</a></p>
+  <p>Don't have an account? <a href="register.php">Sign up now</a></p>
   <small>This page is protected by reCAPTCHA. <a href="#">Learn more.</a></small>
 </div>
 
