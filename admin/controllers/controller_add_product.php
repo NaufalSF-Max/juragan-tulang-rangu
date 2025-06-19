@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 include '../../database/db.php';
 
 // Redirect if not admin or employee
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insert into products table
     $stmt = $conn->prepare("INSERT INTO products (name, description, image_path, label, stock, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
-    $stmt->bind_param("ssssi", $name, $description, $imagePath, $label, $stock);
+    $stmt->bind_param("sss si", $name, $description, $imagePath, $label, $stock);
     $stmt->execute();
     $stmt->close();
 
