@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../db/db.php';
+include '../../database/db.php';
 
 // Redirect if not admin or employee
 if (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'], ['admin', 'employee'])) {

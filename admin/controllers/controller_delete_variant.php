@@ -1,5 +1,5 @@
 <?php
-include '../../db/db.php';
+include '../../database/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['variant_id'])) {
     $variantId = (int)$_POST['variant_id'];

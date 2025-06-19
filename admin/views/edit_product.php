@@ -1,5 +1,5 @@
 <?php
-include '../../db/db.php';
+include '../../database/db.php';
 
 if (!isset($_GET['id'])) {
     header('Location: view_add_product.php');

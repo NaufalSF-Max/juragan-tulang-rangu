@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../db/db.php';
+include '../../database/db.php';
 include '../includes/auth_check.php';
 
 $product_result = $conn->query("SELECT id, name FROM products");

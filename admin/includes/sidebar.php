@@ -41,7 +41,7 @@ function isActive($page) {
     </ul>
     <hr>
     <div>
-        <a href="../../db/logout.php" class="btn btn-outline-danger w-100">
+        <a href="../../database/logout.php" class="btn btn-outline-danger w-100">
             <i class="fas fa-sign-out-alt me-1"></i> Logout
         </a>
     </div>

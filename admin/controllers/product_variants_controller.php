@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../db/db.php';
+include '../../database/db.php';
 
 // Cek autentikasi admin atau karyawan
 if (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'], ['admin', 'employee'])) {
