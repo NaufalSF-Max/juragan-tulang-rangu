@@ -76,68 +76,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Guide to ordering food with online payment">
-	<meta name="author" content="UWS">
-  <title>SignUp - Juragan Tulang Rangu Karawang</title>
-
-  <!-- Favicon -->
+	<title>SignUp - Juragan Tulang Rangu Karawang</title>
   <link href="../img/logo.svg" rel="shortcut icon">
-
-  <!-- Font Awesome CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap");
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Roboto", sans-serif; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Roboto", sans-serif;
+    }
+
     body {
-      background: #000;
-    }
-    body::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0.5;
       width: 100%;
-      height: 100%;
-      background: url("../img/bg/bg-1.svg") center/cover no-repeat;
+      height: 100vh;
+      background-color: #ddd;
     }
-    nav {
-      position: fixed;
-      padding: 25px 60px;
-      z-index: 1;
+
+    .form-section {
+      width: 100%;
+      min-height: 100vh; /* biar tinggi menyesuaikan isi */
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* dari center ke atas */
+      padding: 80px 20px 40px; /* atas 80px, samping 20px, bawah 40px */
+      background-color: transparent;
     }
-    nav a img {
-      width: 167px;
-    }
+
     .form-wrapper {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border-radius: 4px;
-      padding: 70px;
-      width: 450px;
-      transform: translate(-50%, -50%);
+      position: relative;
+      border-radius: 8px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 450px;
       background: rgba(0, 0, 0, 0.75);
-      z-index: 2;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
+
     .form-wrapper h2 {
       color: #fff;
       font-size: 2rem;
+      margin-bottom: 20px;
     }
+
     form {
-      margin: 25px 0 65px;
+      margin-bottom: 30px;
     }
+
     .form-control {
       height: 50px;
       position: relative;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
+
     .form-control input {
       height: 100%;
       width: 100%;
@@ -147,8 +147,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       border-radius: 4px;
       color: #fff;
       font-size: 1rem;
-      padding: 0 20px;
+      padding: 14px 20px 0;
     }
+
     .form-control label {
       position: absolute;
       left: 20px;
@@ -159,11 +160,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       transition: all 0.1s ease;
       pointer-events: none;
     }
+
     .form-control input:focus + label,
     .form-control input:valid + label {
       font-size: 0.75rem;
-      transform: translateY(-130%);
+      transform: translateY(-160%);
     }
+
     button {
       width: 100%;
       padding: 16px 0;
@@ -173,35 +176,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       font-weight: 500;
       border-radius: 4px;
       border: none;
-      margin: 25px 0 10px;
+      margin-top: 15px;
       cursor: pointer;
     }
+
     button:hover {
       background: #c40812;
     }
-    .form-help {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: #b3b3b3;
-    }
-    .form-help a {
-      color: #b3b3b3;
-      text-decoration: none;
-    }
-    .form-help a:hover {
-      text-decoration: underline;
-    }
+
     .form-wrapper p, .form-wrapper small {
       color: #b3b3b3;
     }
+
     .form-wrapper p a, .form-wrapper small a {
       color: #fff;
       text-decoration: none;
     }
+
     .form-wrapper small a {
       color: #0071eb;
     }
+
     .popup {
       position: fixed;
       top: 20px;
@@ -215,15 +210,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       opacity: 1;
       transition: opacity 0.5s ease;
     }
+
     .popup.success {
       background-color: rgba(0, 200, 0, 0.85);
     }
+
     .popup.error {
       background-color: rgba(200, 0, 0, 0.85);
     }
   </style>
 </head>
 <body>
+
 <?php if (!empty($message)): ?>
   <div id="popup" class="popup <?= $type ?>">
     <p><?= htmlspecialchars($message) ?></p>
@@ -242,44 +240,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </script>
 <?php endif; ?>
 
-<div class="form-wrapper">
-  <h2>Sign Up</h2>
-  <form method="POST" action="register.php">
-    <div class="form-control">
-      <input type="text" name="username" id="username" required>
-      <label for="username">Username</label>
-    </div>
-    <div class="form-control">
-      <input type="email" name="email" id="email" required>
-      <label for="email">Email</label>
-    </div>
-    <div class="form-control">
-      <input type="text" name="phone" id="phone" required>
-      <label for="phone">Phone</label>
-    </div>
-    <div class="form-control">
-      <input type="text" name="address" id="address" required>
-      <label for="address">Address</label>
-    </div>
-    <div class="form-control">
-      <input type="password" name="password" id="password" required>
-      <label for="password"> Password</label>
-    </div>
-    <div class="form-control">
-      <input type="password" name="confirm_password" id="confirm_password" required>
-      <label for="confirm_password">Confirm Password</label>
-    </div>
-    <button type="submit">Sign Up</button>
-    <div class="form-help">
-      <div class="remember-me">
-        <input type="checkbox" id="remember-me">
-        <label for="remember-me">Remember me</label>
+<section class="form-section">
+  <div class="form-wrapper">
+    <h2>Sign Up</h2>
+    <form method="POST" action="register.php">
+      <div class="form-control">
+        <input type="text" name="username" id="username" required autofocus>
+        <label for="username">Username</label>
       </div>
-      <a href="#">Need help?</a>
-    </div>
-  </form>
-  <p>Have to Account? <a href="../database/login.php">Sign In</a></p>
-  <small>This page is protected by reCAPTCHA. <a href="#">Learn more.</a></small>
-</div>
+      <div class="form-control">
+        <input type="text" name="address" id="address" required>
+        <label for="address">Address</label>
+      </div>
+      <div class="form-control">
+        <input type="text" name="phone" id="phone" required>
+        <label for="phone">Phone Number</label>
+      </div>
+      <div class="form-control">
+        <input type="email" name="email" id="email" required>
+        <label for="email">Email</label>
+      </div>
+      <div class="form-control">
+        <input type="password" name="password" id="password" required>
+        <label for="password">Password</label>
+      </div>
+      <div class="form-control">
+        <input type="password" name="confirm_password" id="confirm_password" required>
+        <label for="confirm_password">Confirm Password</label>
+      </div>
+      <button type="submit">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="../database/login.php">Sign In</a></p>
+    <small>This page is protected by reCAPTCHA. <a href="#">Learn more.</a></small>
+  </div>
+</section>
+
 </body>
 </html>
