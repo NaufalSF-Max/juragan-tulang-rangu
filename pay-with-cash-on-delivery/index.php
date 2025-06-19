@@ -380,7 +380,7 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 							<!-- Order Container -->
 							<div id="orderContainer" class="theiaStickySidebar">
 								<!-- Form -->
-								<form method="POST" id="orderForm" name="orderForm" onsubmit="return confirmGuestOrder(event);">
+								<form method="POST" id="orderForm" name="orderForm" action="endpoint/ajax/create-order.php">
 
 									<!-- Step 1: Order Summary -->
 									<div id="#orderSummaryStep" class="step">
@@ -447,7 +447,7 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 													<div class="col-md-12">
 														<div class="form-group">
 															<label for="userNameCashPayment">Full Name</label>
-															<input id="userNameCashPayment" class="form-control" name="username" type="text" data-parsley-pattern="^[a-zA-Z\s.]+$" required />
+															<input id="userNameCashPayment" class="form-control" name="name" type="text" data-parsley-pattern="^[a-zA-Z\s.]+$" required />
 														</div>
 													</div>
 												</div>

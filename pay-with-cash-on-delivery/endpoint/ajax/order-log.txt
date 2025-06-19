@@ -1,0 +1,34 @@
+[2025-06-19 20:30:47] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:30:47] delivery_method = Delivery
+[2025-06-19 20:30:47] payment_method = COD
+[2025-06-19 20:30:47] DELIVERY ENUM VALID: true
+[2025-06-19 20:33:48] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:33:48] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:33:48] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:33:48] delivery_method = Delivery
+[2025-06-19 20:33:48] payment_method = COD
+[2025-06-19 20:33:48] DELIVERY ENUM VALID: true
+[2025-06-19 20:37:41] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:37:41] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:37:41] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:37:41] VALUES DEBUG: ["INV\/20250619\/0001","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","adada","COD","Delivery",0,36000,13]
+[2025-06-19 20:46:01] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:46:01] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:46:01] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:46:01] VALUES DEBUG: ["INV\/20250619\/0001","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","adada","COD","Delivery",0,36000,13]
+[2025-06-19 20:46:15] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:46:15] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:46:15] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:46:15] VALUES DEBUG: ["INV\/20250619\/0002","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","adada","COD","Delivery",0,36000,13]
+[2025-06-19 20:46:16] UltraMsg Response: {"sent":"true","message":"ok","id":1}
+[2025-06-19 20:58:50] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:58:50] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:58:50] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:58:50] VALUES DEBUG: ["INV\/20250619\/0003","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","jakarta","lapar","COD","Delivery",0,12000,15]
+[2025-06-19 20:58:51] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 20:59:42] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:59:42] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:59:42] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:59:42] VALUES DEBUG: ["INV\/20250619\/0004","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn","cepet datang","COD","Delivery",0,36000,6]
+[2025-06-19 20:59:43] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:07:39] DEBUG: $_SESSION[user][id] = CSTJTR1
