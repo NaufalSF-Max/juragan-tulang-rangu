@@ -1,0 +1,195 @@
+@media (max-width: 575px) {
+	#logo h1 {
+		width: 250px;
+		font-size: 1.3rem;
+	}
+	.hero-home .content h1 {
+		font-size: 1.8rem;
+	}
+	.hero-home p {
+		font-size: 1.875rem;
+	}
+	.sticky-nav a.list-group-item {
+		font-size: 13px;
+	}
+	/* Form Elements
+	==================================== */
+	#search {
+		margin-top: 15px;
+	}
+}
+
+@media (max-width: 767px) {
+	/* Hero
+	==================================== */
+	.hero-home {
+		height: 450px;
+	}
+	.hero-home.bg-mockup {
+		height: 450px;
+	}
+	.hero-home .content {
+		font-size: 16px;
+		padding: 0 15px;
+	}
+	.hero-home .content h3 {
+		font-size: 42px;
+	}
+	/* Mouse */
+	.mouse-frame {
+		top: 420px;
+	}
+	.tst-content-frame:before {
+		top: 440px;
+	}
+	/* Hero Order */
+	.hero-order .review-wrap {
+		margin-top: 30px;
+	}
+	.hero-order a.review-link {
+		position: static;
+	}
+	.hero-order .score span {
+		font-size: 1.125rem;
+		font-weight: 500;
+		float: right;
+		text-align: left;
+	}
+	.order .main-title h2 {
+		font-size: 26px;
+		margin: 0 0 15px 0;
+	}
+	/* Sticky Nav */
+	.sticky-nav {
+		padding: 15px 0;
+	}
+	.sticky-nav ul {
+		overflow: hidden;
+		overflow-x: auto;
+		white-space: nowrap;
+		padding: 6px 0;
+		text-align: center;
+	}
+	.sticky-nav ul li {
+		margin-right: 5px;
+	}
+	/* Banner
+	==================================== */
+	.banner .textbox {
+		padding: 60px !important;
+		text-align: center;
+	}
+	/* Footer
+	==================================== */
+	footer #copy {
+		text-align: left !important;
+		margin-bottom: 25px;
+	}
+	footer ul li {
+		margin-bottom: 10px;
+	}
+}
+
+@media (max-width: 991px) {
+	/* Cart Messages
+	==================================== */
+	.addedToCartMsg, .alreadyInCartMsg {
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		padding: 30px 20px 30px 150px;
+		font-size: 16px;
+		font-weight: 400;
+		border-radius: 5px 5px 0 0;
+	}
+	.addedToCartMsg:before, .alreadyInCartMsg:before {
+		top: 27px;
+		left: 125px;
+	}
+	/* Header
+	==================================== */
+	header.main-header.sticky {
+		position: static;
+	}
+	header .container {
+		width: 100% !important;
+		margin-right: auto !important;
+		margin-left: auto !important;
+		padding-right: 15px !important;
+		padding-left: 15px !important;
+		max-width: 100%;
+	}
+	/* Header Menu Chevron Down */
+	.main-menu a i {
+		display: none;
+	}
+	/* Header Icons */
+	ul#menuIcons {
+		right: 0;
+		top: 2px;
+	}
+	/* Logo */
+	#logo {
+		width: 280px;
+		position: relative;
+		left: 45px;
+	}
+	/* Banner
+	==================================== */
+	.banner {
+		margin: 0 0 15px 0;
+		padding-bottom: 0;
+	}
+	/* Sub Header
+	==================================== */
+	.sub-header {
+		margin-top: 0;
+	}
+	/* Footer
+	==================================== */
+	footer.main-footer {
+		padding-top: 60px;
+		padding-bottom: 60px;
+	}
+	/* Containers
+	==================================== */
+	#orderContainer, #personalDetails {
+		margin-bottom: 15px;
+	}
+	.services, .contacts {
+		padding: 0;
+	}
+	.faq, .order {
+		padding: 15px 0 0 0;
+	}
+	.faq-accordion, .box, .filter-box, .contact-box {
+		margin: 0 0 15px 0;
+	}
+	/* Grid */
+	.item-body {
+		margin-bottom: 15px;
+	}
+	/* Form Elements
+	==================================== */
+	.price-box {
+		top: 26px;
+	}
+	/* Faq
+	==================================== */
+	.faq .main-title h2 {
+		margin: 15px 0;
+	}
+	.faq-accordion .card:last-child {
+		margin-bottom: 0;
+	}
+}
+
+@media (min-width: 575px) and (max-width: 991px) {
+	/* Containers
+	==================================== */
+	/* Order Items */
+	.order-list-img {
+		width: 100px;
+	}
+}
+
