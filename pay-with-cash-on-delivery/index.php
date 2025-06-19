@@ -480,7 +480,7 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 													<div class="col-md-12 col-sm-6">
 														<div class="form-group">
 															<label for="deliveryZone">Delivery Zone</label>
-															<select id="deliveryZone" name="delivery_zone" class="form-control" required>
+															<select id="deliveryZone" name="delivery_zone" class="form-control">
 																<option value="">-- Select Zone --</option>
 																<!-- Options dimuat dari database -->
 															</select>

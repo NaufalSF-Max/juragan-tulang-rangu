@@ -44,22 +44,25 @@ $delivery_zone_id = isset($_POST['delivery_zone']) ? (int)$_POST['delivery_zone'
 $payment_method = $_POST['payment_method'];
 
 // Ambil fee zona dari DB
-$delivery_fee = 0; // default jika pickup atau tidak pilih zona
+$delivery_fee = 0;
 
 if ($delivery_method === 'Delivery' && $delivery_zone_id) {
-    $stmt = $conn->prepare("SELECT fee, name, city FROM delivery_zones WHERE id = ?");
-    $stmt->bind_param("i", $delivery_zone_id);
-    $stmt->execute();
-    $stmt->bind_result($delivery_fee, $zone_name, $zone_city);
+	$stmt = $conn->prepare("SELECT fee, name, city FROM delivery_zones WHERE id = ?");
+	$stmt->bind_param("i", $delivery_zone_id);
+	$stmt->execute();
+	$stmt->bind_result($delivery_fee, $zone_name, $zone_city);
 
-    if ($stmt->fetch()) {
-        $address .= " - Zone: $zone_name $zone_city";
-        log_error("✅ Zona ditemukan: $zone_name, $zone_city, Fee: $delivery_fee");
-    } else {
-        log_error("❌ Gagal fetch zona ID $delivery_zone_id");
-    }
-
-    $stmt->close();
+	if ($stmt->fetch()) {
+		$address .= " - Zone: $zone_name $zone_city";
+		log_error("✅ Zona ditemukan: $zone_name, $zone_city, Fee: $delivery_fee");
+	} else {
+		log_error("❌ Gagal fetch zona ID $delivery_zone_id");
+	}
+	$stmt->close();
+} else if ($delivery_method === 'Pickup') {
+    $delivery_fee = 0;
+    $delivery_zone_id = null; // ✅ NULL supaya tidak melanggar foreign key
+    log_error("🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan");
 }
 
 // Ambil isi cart
@@ -81,17 +84,41 @@ $total_products = 0;
 while ($row = $result->fetch_assoc()) {
 	$base = (int)$row['base_price'];
 	$qty = (int)$row['quantity'];
-	$sub_total = $base * $qty;
-	$total_products += $sub_total;
+	$extraPrice = 0;
+	$extraLabels = [];
+
+	if (!empty($row['extra_ids'])) {
+		$extraIds = explode(',', $row['extra_ids']);
+		$placeholders = implode(',', array_fill(0, count($extraIds), '?'));
+		$types = str_repeat('i', count($extraIds));
+
+		$sqlExtra = "SELECT variant, price FROM product_variants WHERE id IN ($placeholders)";
+		$stmtExtra = $conn->prepare($sqlExtra);
+		$stmtExtra->bind_param($types, ...$extraIds);
+		$stmtExtra->execute();
+		$resultExtra = $stmtExtra->get_result();
+
+		while ($extra = $resultExtra->fetch_assoc()) {
+			$extraPrice += (int)$extra['price'];
+			$extraLabels[] = $extra['variant'];
+		}
+
+		$stmtExtra->close();
+	}
+
+	$totalPerItem = ($base + $extraPrice) * $qty;
+	$total_products += $totalPerItem;
 
 	$items[] = [
 		'name' => $row['product_name'],
 		'variant' => $row['option_id'],
+		'extras' => $extraLabels,
 		'quantity' => $qty,
-		'price' => $base,
-		'subtotal' => $sub_total
+		'price' => $base + $extraPrice,
+		'subtotal' => $totalPerItem
 	];
 }
+
 $stmt->close();
 
 if (count($items) === 0) {
@@ -202,10 +229,17 @@ $subtotal = 0;
 foreach ($items as $item) {
     $productName = $item['name'];
     $qty = $item['quantity'];
-    $price = $item['price'];
+    $price = $item['price']; // sudah termasuk base + extra
     $lineTotal = $qty * $price;
     $subtotal += $lineTotal;
-    $waMessage .= "- $productName x$qty = Rp" . number_format($lineTotal, 0, ',', '.') . "\n";
+
+    // Tampilkan extras jika ada
+    $extrasText = '';
+    if (!empty($item['extras'])) {
+        $extrasText = " (Extra: " . implode(', ', $item['extras']) . ")";
+    }
+
+    $waMessage .= "- $productName x$qty$extrasText = Rp" . number_format($lineTotal, 0, ',', '.') . "\n";
 }
 
 $waMessage .= "\n💰 *Subtotal Produk:*\nRp " . number_format($subtotal, 0, ',', '.') . "\n";
@@ -223,7 +257,7 @@ $waMessage .= "🌟 Semoga harimu menyenangkan dan pesananmu memuaskan! 🌟";
 
 // Kirim ke UltraMsg
 $params = array(
-	'token' => '67h0ks2kaofqoanl', // Ganti dengan token kamu
+	// 'token' => '67h0ks2kaofqoanl', // Ganti dengan token kamu
 	'to' => $phoneIntl,
 	'body' => $waMessage
 );
