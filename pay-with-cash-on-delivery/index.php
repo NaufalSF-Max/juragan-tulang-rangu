@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-use Foodboard\Config;
+use JuraganTulangRangu\Config;
 
 require_once __DIR__ . '/Config/Config.php';
 require_once __DIR__ . '/../database/db.php'; 
@@ -399,7 +399,7 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 							<!-- Order Container -->
 							<div id="orderContainer" class="theiaStickySidebar">
 								<!-- Form -->
-								<form method="POST" id="orderForm" name="orderForm" onsubmit="return confirmGuestOrder(event);">
+								<form method="POST" id="orderForm" name="orderForm" action="endpoint/ajax/create-order.php">
 
 									<!-- Step 1: Order Summary -->
 									<div id="#orderSummaryStep" class="step">
@@ -460,13 +460,13 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 										<div class="order-header">
 											<h3>Order Summary 2/2</h3>
 										</div>
-										<div id="personalDetails" data-return-url='<?php echo Config::THANKYOU_URL; ?>' data-currency='<?php echo Config::CURRENCY; ?>'>
+										<div id="personalDetails">
 											<div class="order-body">
 												<div class="row">
 													<div class="col-md-12">
 														<div class="form-group">
 															<label for="userNameCashPayment">Full Name</label>
-															<input id="userNameCashPayment" class="form-control" name="username" type="text" data-parsley-pattern="^[a-zA-Z\s.]+$" required />
+															<input id="userNameCashPayment" class="form-control" name="name" type="text" data-parsley-pattern="^[a-zA-Z\s.]+$" required />
 														</div>
 													</div>
 												</div>
@@ -499,7 +499,7 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 													<div class="col-md-12 col-sm-6">
 														<div class="form-group">
 															<label for="deliveryZone">Delivery Zone</label>
-															<select id="deliveryZone" name="delivery_zone" class="form-control" required>
+															<select id="deliveryZone" name="delivery_zone" class="form-control">
 																<option value="">-- Select Zone --</option>
 																<!-- Options dimuat dari database -->
 															</select>

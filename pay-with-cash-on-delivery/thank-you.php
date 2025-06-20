@@ -1,35 +1,49 @@
 <?php
 
-use Foodboard\Config;
-use Foodboard\CheckoutService;
+use JuraganTulangRangu\Config;
 
 session_start();
 require_once __DIR__ . '/Config/Config.php';
+require_once __DIR__ . '/../database/db.php';
 
-if (!empty($_SESSION["foodboard-cart"])) {
+$invoiceId = $_GET['invoice_id'] ?? $_SESSION['last_invoice_id'] ?? null;
+unset($_SESSION['last_invoice_id']); // agar tidak diakses ulang
 
-    $cartItemsArray = $_SESSION["foodboard-cart"]["items"];
-    $customerDetailsArray = $_SESSION["foodboard-cart"]["customerDetails"];
-    $subject = Config::ORDER_EMAIL_SUBJECT;
-    require_once __DIR__ . '/Service/CheckoutService.php';
-    $checkoutModel = new CheckoutService();
-
-    $recipientArr = array(
-        $_SESSION["foodboard-cart"]["customerDetails"]["email"] => $_SESSION["foodboard-cart"]["customerDetails"]["email"]
-    );
-
-    if (!empty(Config::RECIPIENT_EMAIL)) {
-        $recipientCCArr = array(
-            Config::RECIPIENT_EMAIL => Config::RECIPIENT_EMAIL
-        );
-    }
-
-
-    $shippingAmount = $_SESSION["foodboard-cart"]["shippingAmount"];
-    $checkoutService = $checkoutModel->sendOrderEmail($subject, $cartItemsArray, $shippingAmount, $customerDetailsArray, $recipientArr, $recipientCCArr);
-} else {
-    header("Location:" . Config::APP_ROOT . Config::WORK_ROOT . "pay-with-cash-on-delivery/order.php");
+if (!$invoiceId) {
+    echo "<h2>Transaksi tidak ditemukan</h2>";
+    exit;
 }
+
+$stmt = $conn->prepare("SELECT * FROM transactions WHERE id = ?");
+$stmt->bind_param("s", $invoiceId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    echo "<h2>Transaksi tidak ditemukan</h2>";
+    exit;
+}
+
+$trans = $result->fetch_assoc();
+$stmt->close();
+
+// Coba ambil data dari session jika ada
+if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] === $invoiceId) {
+    $items = $_SESSION['last_transaction']['items'];
+    $subtotal = $_SESSION['last_transaction']['total'] - $_SESSION['last_transaction']['delivery_fee'];
+    $ongkir = $_SESSION['last_transaction']['delivery_fee'];
+    $total = $_SESSION['last_transaction']['total'];
+
+    // Hapus dari session agar tidak menumpuk
+    unset($_SESSION['last_transaction']);
+} else {
+    // Tidak ada data di session, fallback manual (jika kelak ada tabel transaction_items)
+    $items = []; // Atau beri pesan "tidak bisa tampilkan detail"
+    $subtotal = $trans['total_price'] - $trans['delivery_fee'];
+    $ongkir = $trans['delivery_fee'];
+    $total = $trans['total_price'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -150,62 +164,55 @@ if (!empty($_SESSION["foodboard-cart"])) {
                         <!-- Left Sidebar -->
                         <div class="col-lg-12" id="mainContent">
                             <!-- Filter Area -->
-                            <h3>Thank you! Ordered items:</h3>
+                            <h3>🎉 Terima kasih! Berikut detail pesanan Anda:</h3>
                             <table class="tbl-cart" cellpadding="10" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="text-left"><?php echo "Title"; ?></th>
-                                        <th class="table-th"><?php echo "Unit Price"; ?>
-                                            (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
-                                        <th class="table-th"><?php echo "Quantity"; ?></th>
-                                        <th class="table-th"><?php echo "Total Price"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
+                                        <th class="text-left">Produk</th>
+                                        <th class="table-th">Harga Satuan (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
+                                        <th class="table-th">Jumlah</th>
+                                        <th class="table-th">Subtotal (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    <?php
-                                    foreach ($cartItemsArray as $cartItems) {
-                                        foreach ($cartItems as $k => $v) {
-                                            $productTitle = $cartItems[$k]["name"];
-                                            $price = $cartItems[$k]["unit_price"];
-                                    ?>
-                                            <tr class="product-title-resp">
-                                                <td class="text-left"><span class="inline-block title-width"><?php echo $productTitle; ?></span></td>
-                                                <td data-label="Price" class="table-td"><?php echo number_format($price, 2); ?></td>
-                                                <td data-label="Quantity" class="table-td"><?php echo $cartItems[$k]['quantity']; ?></td>
-                                                <td data-label="Total" class="table-td"><?php echo number_format($price * $cartItems[$k]['quantity'], 2); ?></td>
-
-                                            </tr>
-                                        <?php
-                                            $total_price_array[] = $price * $cartItems[$k]['quantity'];
-                                        }
-                                    }
-                                    $sub_total_price = array_sum($total_price_array);
-                                    if (!empty($shippingAmount)) {
-                                        $total_price = $sub_total_price + $shippingAmount;
-                                        ?>
-                                        <tr class="sub_total">
-                                            <td class="grand-resp" align="right" colspan="2"><strong><?php echo "Delivery Fee"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
-                                            <td data-label="Shipping Total" align="right" colspan="3"><strong><?php echo number_format($shippingAmount, 2); ?></strong></td>
-                                        </tr>
-                                    <?php
-                                    } else {
-                                        $total_price = $sub_total_price;
-                                    }
-                                    ?>
-                                    <tr class="sub_total">
-                                        <td class="grand-resp" align="right" colspan="2"><strong><?php echo "Grand Total"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
-                                        <td data-label="Grand Total" align="right" colspan="3"><strong><?php echo number_format($total_price, 2); ?></strong></td>
+                                <?php foreach ($items as $item): ?>
+                                    <tr>
+                                        <td class="text-left">
+                                            <?php
+                                                // Tampilkan: Produk + (Extra: ...)
+                                                $fullName = htmlspecialchars($item['name']);
+                                                if (!empty($item['extras'])) {
+                                                    $fullName .= ' (Extra: ' . htmlspecialchars(implode(', ', $item['extras'])) . ')';
+                                                }
+                                                echo $fullName;
+                                            ?>
+                                        </td>
+                                        <td class="table-td"><?php echo number_format($item['price'], 0, ',', '.'); ?></td>
+                                        <td class="table-td"><?php echo $item['quantity']; ?></td>
+                                        <td class="table-td"><?php echo number_format($item['subtotal'], 0, ',', '.'); ?></td>
                                     </tr>
-                                </tbody>
+                                <?php endforeach; ?>
+                                <tr class="sub_total">
+                                    <td colspan="3" align="right"><strong>Ongkos Kirim (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
+                                    <td class="table-td"><?php echo number_format($ongkir ?? 0, 0, ',', '.'); ?></td>
+                                </tr>
+                                <tr class="sub_total">
+                                    <td colspan="3" align="right"><strong>Total (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
+                                    <td class="table-td"><?php echo number_format($total, 0, ',', '.'); ?></td>
+                                </tr>
+                            </tbody>
                             </table>
-                            <h3>Customer details:</h3>
-                            <?php foreach ($customerDetailsArray as $k => $v) { ?>
-                                <div>
-                                    <strong><?php echo ucfirst($k); ?>: </strong><span><?php echo $v; ?></span>
-                                </div>
-                            <?php } ?>
-                            <p class="mb-0"><a href="https://ultimatewebsolutions.net/foodboard/" class="btn-2">Back to Home</a></p>
+                            <h3>📝 Detail Pembeli:</h3>
+                            <ul>
+                                <li><strong>Nama:</strong> <?php echo htmlspecialchars($trans['full_name']); ?></li>
+                                <li><strong>Email:</strong> <?php echo htmlspecialchars($trans['email']); ?></li>
+                                <li><strong>Telepon:</strong> <?php echo htmlspecialchars($trans['phone']); ?></li>
+                                <li><strong>Alamat:</strong> <?php echo htmlspecialchars($trans['delivery_address']); ?></li>
+                                <li><strong>Metode Pembayaran:</strong> <?php echo htmlspecialchars($trans['payment_method']); ?></li>
+                                <li><strong>Metode Pengiriman:</strong> <?php echo htmlspecialchars($trans['delivery_method']); ?></li>
+                                <li><strong>Pesan:</strong> <?php echo htmlspecialchars($trans['message']); ?></li>
+                            </ul>
+                            <p class="mb-0"><a href="../" class="btn-2">Back to Home</a></p>
                         </div>
                     </div>
                 </div>
@@ -292,7 +299,11 @@ if (!empty($_SESSION["foodboard-cart"])) {
     <!-- Main Javascript File -->
     <script src="../js/scripts.js"></script>
 
+    <?php 
+        $invoiceId = $_SESSION['last_invoice_id'] ?? null;
+        unset($_SESSION['last_invoice_id']); // agar 1x pakai
+    ?>
+
 </body>
 
 </html>
-<?php unset($_SESSION["foodboard-cart"]); ?>

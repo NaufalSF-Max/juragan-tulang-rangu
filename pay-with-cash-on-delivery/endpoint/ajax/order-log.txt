@@ -1,0 +1,240 @@
+[2025-06-19 20:30:47] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:30:47] delivery_method = Delivery
+[2025-06-19 20:30:47] payment_method = COD
+[2025-06-19 20:30:47] DELIVERY ENUM VALID: true
+[2025-06-19 20:33:48] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:33:48] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:33:48] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:33:48] delivery_method = Delivery
+[2025-06-19 20:33:48] payment_method = COD
+[2025-06-19 20:33:48] DELIVERY ENUM VALID: true
+[2025-06-19 20:37:41] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:37:41] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:37:41] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:37:41] VALUES DEBUG: ["INV\/20250619\/0001","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","adada","COD","Delivery",0,36000,13]
+[2025-06-19 20:46:01] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:46:01] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:46:01] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:46:01] VALUES DEBUG: ["INV\/20250619\/0001","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","adada","COD","Delivery",0,36000,13]
+[2025-06-19 20:46:15] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:46:15] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:46:15] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:46:15] VALUES DEBUG: ["INV\/20250619\/0002","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","adada","COD","Delivery",0,36000,13]
+[2025-06-19 20:46:16] UltraMsg Response: {"sent":"true","message":"ok","id":1}
+[2025-06-19 20:58:50] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:58:50] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:58:50] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:58:50] VALUES DEBUG: ["INV\/20250619\/0003","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","jakarta","lapar","COD","Delivery",0,12000,15]
+[2025-06-19 20:58:51] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 20:59:42] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 20:59:42] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 20:59:42] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 20:59:42] VALUES DEBUG: ["INV\/20250619\/0004","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn","cepet datang","COD","Delivery",0,36000,6]
+[2025-06-19 20:59:43] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:07:39] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:09:03] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:09:03] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:09:03] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:09:03] VALUES DEBUG: ["INV\/20250619\/0005","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","cepet dateng bang","COD","Delivery",0,24000,10]
+[2025-06-19 21:09:04] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:12:01] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:12:01] ✅ Zona ditemukan: Tambun Selatan, Bekasi, Fee: 17000
+[2025-06-19 21:12:01] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:12:01] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:12:01] VALUES DEBUG: ["INV\/20250619\/0006","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta - Zone: Tambun Selatan Bekasi","cepet dateng bang","COD","Delivery",17000,41000,10]
+[2025-06-19 21:12:01] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:19:21] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:19:21] ✅ Zona ditemukan: Jakarta Barat, Jakarta, Fee: 25000
+[2025-06-19 21:19:21] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:19:21] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:19:21] VALUES DEBUG: ["INV\/20250619\/0007","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Jakarta Barat Jakarta","cepet datang","COD","Delivery",25000,169000,15]
+[2025-06-19 21:19:22] UltraMsg Response: {"sent":"true","message":"ok","id":2}
+[2025-06-19 21:19:22] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:19:22] ✅ Zona ditemukan: Jakarta Barat, Jakarta, Fee: 25000
+[2025-06-19 21:34:50] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:34:50] ✅ Zona ditemukan: Karawang Barat, Karawang, Fee: 8000
+[2025-06-19 21:34:50] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:34:50] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:34:50] VALUES DEBUG: ["INV\/20250619\/0008","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Jakarta - Zone: Karawang Barat Karawang","adada","COD","Delivery",8000,56000,3]
+[2025-06-19 21:34:50] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:47:54] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:47:54] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:47:54] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:47:54] VALUES DEBUG: ["INV\/20250619\/0009","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","cepet dateng bang","COD","Pickup",0,36000,0]
+[2025-06-19 21:48:21] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:48:21] ✅ Zona ditemukan: Cikampek, Karawang, Fee: 12000
+[2025-06-19 21:48:21] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:48:21] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:48:21] VALUES DEBUG: ["INV\/20250619\/0009","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Jakarta - Zone: Cikampek Karawang","lapar","COD","Delivery",12000,48000,5]
+[2025-06-19 21:48:21] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:48:58] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:49:21] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:49:21] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:49:21] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:49:21] VALUES DEBUG: ["INV\/20250619\/0010","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Jakarta","cepet dateng bang","COD","Pickup",0,12000,0]
+[2025-06-19 21:53:27] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:53:27] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-19 21:53:27] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:53:27] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:53:27] VALUES DEBUG: ["INV\/20250619\/0010","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Jakarta","cepet dateng bang","COD","Pickup",0,12000,null]
+[2025-06-19 21:53:27] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 21:54:49] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 21:54:49] ✅ Zona ditemukan: Cikampek, Karawang, Fee: 12000
+[2025-06-19 21:54:49] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 21:54:49] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 21:54:49] VALUES DEBUG: ["INV\/20250619\/0011","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta - Zone: Cikampek Karawang","cepat dateng","COD","Delivery",12000,24000,5]
+[2025-06-19 21:54:51] UltraMsg Response: {"sent":"true","message":"ok","id":3}
+[2025-06-19 22:00:59] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 22:00:59] ✅ Zona ditemukan: Cikampek, Karawang, Fee: 12000
+[2025-06-19 22:01:22] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 22:01:22] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-19 22:01:22] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 22:01:22] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 22:01:22] VALUES DEBUG: ["INV\/20250619\/0012","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","enak","COD","Pickup",0,12000,null]
+[2025-06-19 22:01:23] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 22:01:58] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 22:01:58] ✅ Zona ditemukan: Luar Zona / Jabodetabek, Luar Area, Fee: 30000
+[2025-06-19 22:01:58] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 22:01:58] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 22:01:58] VALUES DEBUG: ["INV\/20250619\/0013","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Luar Zona \/ Jabodetabek Luar Area","lapar","COD","Delivery",30000,45000,18]
+[2025-06-19 22:01:58] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-19 22:07:37] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 22:07:37] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-19 22:07:37] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 22:07:37] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 22:07:37] VALUES DEBUG: ["INV\/20250619\/0014","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Jakarta","cepat dateng","COD","Pickup",0,15000,null]
+[2025-06-19 22:07:39] UltraMsg Response: {"sent":"true","message":"ok","id":4}
+[2025-06-19 22:39:51] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 22:39:51] ✅ Zona ditemukan: Luar Zona / Jabodetabek, Luar Area, Fee: 30000
+[2025-06-19 22:39:51] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 22:39:51] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 22:39:51] VALUES DEBUG: ["INV\/20250619\/0015","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Luar Zona \/ Jabodetabek Luar Area","cepet datang","COD","Delivery",30000,45000,18]
+[2025-06-19 22:41:41] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 22:41:41] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-19 22:41:41] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 22:41:41] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 22:41:41] VALUES DEBUG: ["INV\/20250619\/0016","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn","cepet dateng bang","COD","Pickup",0,12000,null]
+[2025-06-19 23:14:30] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 23:14:30] ✅ Zona ditemukan: Telukjambe Barat, Karawang, Fee: 7000
+[2025-06-19 23:14:30] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 23:14:30] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 23:14:30] VALUES DEBUG: ["INV\/20250619\/0017","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Telukjambe Barat Karawang","cepet dateng bang","COD","Delivery",7000,22000,2]
+[2025-06-19 23:14:30] ✅ $_SESSION[last_transaction] sudah di-set: {"id":"INV\/20250619\/0017","items":[{"name":"Dimsum","variant":6,"extras":["Extra Hot"],"quantity":1,"price":15000,"subtotal":15000}],"delivery_fee":7000,"total":22000,"address":"Iwjsnndn - Zone: Telukjambe Barat Karawang","name":"Naufal Syafiq Fadhillah","email":"naufalsafiqq@gmail.com","phone":"62859121392342","message":"cepet dateng bang","payment_method":"COD","delivery_method":"Delivery"}
+[2025-06-19 23:15:38] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 23:15:38] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-19 23:15:38] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 23:15:38] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 23:15:38] VALUES DEBUG: ["INV\/20250619\/0018","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Iwjsnndn","cepet datang","COD","Pickup",0,12000,null]
+[2025-06-19 23:22:40] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-19 23:22:40] ✅ Zona ditemukan: Purwakarta Kota, Purwakarta, Fee: 20000
+[2025-06-19 23:22:40] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-19 23:22:40] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-19 23:22:40] VALUES DEBUG: ["INV\/20250619\/0019","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","ferdiyansah@gmail.com","Iwjsnndn - Zone: Purwakarta Kota Purwakarta","cepet datang","COD","Delivery",20000,32000,7]
+[2025-06-20 00:00:05] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:00:05] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:00:05] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:00:05] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:00:05] VALUES DEBUG: ["INV\/20250620\/0001","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,57000,8]
+[2025-06-20 00:00:57] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:00:57] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:00:57] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:00:57] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:00:57] VALUES DEBUG: ["INV\/20250620\/0002","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:04:17] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:04:17] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:04:17] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:04:17] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:04:17] VALUES DEBUG: ["INV\/20250620\/0003","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:16:58] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:16:58] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:16:58] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:16:58] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:16:58] VALUES DEBUG: ["INV\/20250620\/0004","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:18:44] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:18:44] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:18:44] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:18:44] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:18:44] VALUES DEBUG: ["INV\/20250620\/0005","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:19:55] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:19:55] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:19:55] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:19:55] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:19:55] VALUES DEBUG: ["INV\/20250620\/0006","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:20:13] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:20:13] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:20:13] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:20:13] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:20:13] VALUES DEBUG: ["INV\/20250620\/0007","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:20:19] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:20:19] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:20:19] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:20:19] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:20:19] VALUES DEBUG: ["INV\/20250620\/0008","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:24:39] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:24:39] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:24:39] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:24:39] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:24:39] VALUES DEBUG: ["INV\/20250620\/0009","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:27:16] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:27:16] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:27:16] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:27:16] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:27:16] VALUES DEBUG: ["INV\/20250620\/0010","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:32:00] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:32:00] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 00:32:00] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:32:00] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:32:00] VALUES DEBUG: ["INV\/20250620\/0011","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","lapar","COD","Delivery",21000,72000,8]
+[2025-06-20 00:48:18] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:48:18] ✅ Zona ditemukan: Telukjambe Timur, Karawang, Fee: 5000
+[2025-06-20 00:48:18] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:48:18] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:48:18] VALUES DEBUG: ["INV\/20250620\/0012","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Telukjambe Timur Karawang","enak","COD","Delivery",5000,95000,1]
+[2025-06-20 00:57:35] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:57:35] ✅ Zona ditemukan: Telukjambe Timur, Karawang, Fee: 5000
+[2025-06-20 00:57:35] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:57:35] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:57:35] VALUES DEBUG: ["INV\/20250620\/0013","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Telukjambe Timur Karawang","enak","COD","Delivery",5000,71000,1]
+[2025-06-20 00:58:41] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 00:58:41] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-20 00:58:41] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 00:58:41] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 00:58:41] VALUES DEBUG: ["INV\/20250620\/0014","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn","cepet dateng bang","COD","Pickup",0,27000,null]
+[2025-06-20 01:05:01] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 01:05:01] ✅ Zona ditemukan: Campaka, Purwakarta, Fee: 21000
+[2025-06-20 01:05:01] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 01:05:01] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 01:05:01] VALUES DEBUG: ["INV\/20250620\/0015","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Campaka Purwakarta","adada","COD","Delivery",21000,102000,8]
+[2025-06-20 01:05:06] UltraMsg Response: {"sent":"true","message":"ok","id":5}
+[2025-06-20 01:11:00] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 01:11:00] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-20 01:11:00] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 01:11:00] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 01:11:00] VALUES DEBUG: ["INV\/20250620\/0016","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn","adada","COD","Pickup",0,15000,null]
+[2025-06-20 01:11:03] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-20 01:11:03] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 01:11:03] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-20 01:11:34] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 01:11:34] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-20 01:11:34] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 01:11:34] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 01:11:34] VALUES DEBUG: ["INV\/20250620\/0017","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Iwjsnndn","cepet datang","COD","Pickup",0,51000,null]
+[2025-06-20 01:11:38] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-20 01:13:28] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 01:13:28] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-20 01:13:28] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 01:13:28] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 01:13:28] VALUES DEBUG: ["INV\/20250620\/0018","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Iwjsnndn","cepet datang","COD","Pickup",0,15000,null]
+[2025-06-20 01:13:31] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-20 01:16:19] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 01:16:19] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-20 01:16:19] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 01:16:19] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 01:16:19] VALUES DEBUG: ["INV\/20250620\/0019","CSTJTR1","Naufal Syafiq Fadhillah","62876554848","naufalsafiqq@gmail.com","Iwjsnndn","cepet datang","COD","Pickup",0,27000,null]
+[2025-06-20 01:16:22] UltraMsg Response: {"error":"Wrong token. Please provide token as a GET parameter."}
+[2025-06-20 01:18:25] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 01:18:25] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-20 01:18:25] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 01:18:25] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 01:18:25] VALUES DEBUG: ["INV\/20250620\/0020","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","cepet datang","COD","Pickup",0,27000,null]
+[2025-06-20 01:18:29] UltraMsg Response: {"sent":"true","message":"ok","id":6}

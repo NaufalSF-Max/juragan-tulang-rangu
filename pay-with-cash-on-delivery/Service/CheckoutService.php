@@ -1,6 +1,8 @@
 <?php
 
-namespace Foodboard;
+namespace JuraganTulangRangu;
+
+use JuraganTulangRangu\Config;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -13,36 +15,69 @@ class CheckoutService
         require_once __DIR__ . '/../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
         require_once __DIR__ . '/../../vendor/phpmailer/phpmailer/src/Exception.php';
         require_once __DIR__ . '/../../vendor/phpmailer/phpmailer/src/SMTP.php';
-        $mail = new PHPMailer();
 
-        require_once __DIR__ . '/../resource/mail/order-confirmation.php';
-        $emailBodyHtml = getOrderBody($cartItemsArray, $customerDetailsArray, $shippingAmount);
-        // set the recipient (To email address) generally the admin
+        $mail = new PHPMailer(true); // ✅ Perubahan: gunakan true agar support try-catch
 
-        foreach ($recipientArr as $recipient) {
-            $mail->AddAddress($recipient);
+        if (!is_array($recipientBCCArr)) {
+            $recipientBCCArr = array_map('trim', explode(',', $recipientBCCArr));
         }
+        
+        try {
+            // ✅ Konfigurasi SMTP ditambahkan
+            $mail->isSMTP();
+            $mail->Host = Config::SMTP_HOST;
+            $mail->SMTPAuth = true;
+            $mail->Username = Config::SMTP_USERNAME;
+            $mail->Password = Config::SMTP_PASSWORD;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // bisa juga 'ssl'
+            $mail->Port = Config::SMTP_PORT;
 
-        foreach ($recipientCCArr as $ccRecipient) {
-            $mail->AddCC($ccRecipient);
+            // ✅ Tambahan: timeout dan debug
+            $mail->Timeout = 10;
+            $mail->SMTPDebug = 0; // Ubah jadi 2 jika ingin debugging saat dev
+            $mail->Debugoutput = 'error_log'; // simpan output debug ke log server
+
+            // ✅ Penerima
+            foreach ($recipientArr as $recipient) {
+                if (filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+                    $mail->addAddress($recipient);
+                }
+            }
+
+            foreach ($recipientCCArr as $cc) {
+                if (filter_var($cc, FILTER_VALIDATE_EMAIL)) {
+                    $mail->addCC($cc);
+                }
+            }
+
+            foreach ($recipientBCCArr as $bcc) {
+                if (filter_var($bcc, FILTER_VALIDATE_EMAIL)) {
+                    $mail->addBCC($bcc);
+                }
+            }
+
+            // ✅ Set email
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+
+            require_once __DIR__ . '/../resource/mail/order-confirmation.php';
+            $emailBodyHtml = getOrderBody($cartItemsArray, $customerDetailsArray, $shippingAmount);
+            $mail->Body = $emailBodyHtml;
+
+            $replyToEmail = Config::SENDER_EMAIL;
+            $replyToName = Config::SENDER_NAME;
+            $mail->setFrom($replyToEmail, $replyToName);
+            $mail->addReplyTo($replyToEmail, $replyToName);
+
+            // ✅ Kirim email
+            $mailResult = $mail->send();
+            return $mailResult;
+
+        } catch (Exception $e) {
+            error_log("Email gagal dikirim: " . $mail->ErrorInfo);
+            return false;
         }
-
-        $mail->isHTML(true);
-        $mail->Subject = Config::ORDER_EMAIL_SUBJECT;
-
-        require_once __DIR__ . '/../resource/mail/order-confirmation.php';
-        $emailBodyHtml = getOrderBody($cartItemsArray, $customerDetailsArray, $shippingAmount);
-        $mail->Body = $emailBodyHtml;
-        $replyToEmail = Config::SENDER_EMAIL;
-        $replyToName = Config::SENDER_NAME;
-        $mail->setFrom(Config::SENDER_EMAIL, Config::SENDER_NAME);
-        $mail->addReplyTo($replyToEmail, $replyToName);
-        $mailResult = $mail->send();
-
-        return $mailResult;
     }
-
-
     function sanitizeEmails($emailArray)
     {
         $cleanEmailArray = array();
