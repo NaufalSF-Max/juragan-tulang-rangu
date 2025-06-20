@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+/*form untuk tampilan awal   */
+.form-box {
+    display: flex;
+    flex-direction: column;
+}
+.form-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+    width: 100%;
+    max-width: 400px;
+}
+
+.input-field {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+/*end from  */
+
+
+.form-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.input-field {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #e9f1ff;
+}
+
+.payment-method {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.payment-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.payment-icons img {
+    width: 32px;
+    height: 32px;
+}
+
+.payment-label {
+    font-weight: bold;
+    color: #555;
+}
