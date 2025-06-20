@@ -8,7 +8,8 @@ $success = "";
 // ==== Cek Remember Me ====
 if (!isset($_SESSION['user']) && isset($_COOKIE['remember_token'])) {
   $token = $_COOKIE['remember_token'];
-  $stmt = $conn->prepare("SELECT id, username, role FROM users WHERE remember_token=?");
+  $stmt = $conn->prepare("SELECT id, username, email, phone, address, role FROM users WHERE remember_token=?");
+
   $stmt->bind_param("s", $token);
   $stmt->execute();
   $stmt->store_result();
@@ -335,7 +336,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button type="submit">Sign In</button>
     <div class="form-help">
       <div class="remember-me">
-        <input type="checkbox" id="remember-me">
+        <input type="checkbox" id="remember-me" name="remember_me">
         <label for="remember-me">Remember me</label>
       </div>
       <a href="../faq.html">Need help?</a>
