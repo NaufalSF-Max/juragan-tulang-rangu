@@ -23,6 +23,12 @@ function isActive($page) {
                 <i class="fas fa-box me-2"></i> Menu
             </a>
         </li>
+        </li>
+        <li class="nav-item">
+            <a href="view_add_product.php" class="nav-link <?= isActive('index.php') ?>">
+                <i class="fas fa-box me-2"></i> Pengumuman Toko
+            </a>
+        </li>
         <li>
             <a href="product_variants_manage.php" class="nav-link <?= isActive('product_option.php') ?>">
                 <i class="fas fa-tags me-2"></i> Product Variants
