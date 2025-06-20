@@ -189,42 +189,6 @@ if (!$stmt->execute()) {
 }
 $stmt->close();
 
-// ===== Pencatatan Keuangan Harian =====
-$today = date('Y-m-d');
-$product_income = $total - $delivery_fee;
-$delivery_income = $delivery_fee;
-
-// Cek apakah data hari ini sudah ada
-$checkStmt = $conn->prepare("SELECT id FROM daily_financial_records WHERE record_date = ?");
-$checkStmt->bind_param("s", $today);
-$checkStmt->execute();
-$checkStmt->store_result();
-
-if ($checkStmt->num_rows > 0) {
-	// Sudah ada -> update
-	$updateStmt = $conn->prepare("
-		UPDATE daily_financial_records
-		SET product_income = product_income + ?, delivery_income = delivery_income + ?
-		WHERE record_date = ?
-	");
-	$updateStmt->bind_param("iis", $product_income, $delivery_income, $today);
-	$updateStmt->execute();
-	$updateStmt->close();
-	log_error("📈 Rekap harian DITAMBAH untuk $today: Produk=$product_income, Ongkir=$delivery_income");
-} else {
-	// Belum ada -> insert baru
-	$insertStmt = $conn->prepare("
-		INSERT INTO daily_financial_records (record_date, product_income, delivery_income)
-		VALUES (?, ?, ?)
-	");
-	$insertStmt->bind_param("sii", $today, $product_income, $delivery_income);
-	$insertStmt->execute();
-	$insertStmt->close();
-	log_error("📊 Rekap harian DIBUAT untuk $today: Produk=$product_income, Ongkir=$delivery_income");
-}
-
-$checkStmt->close();
-
 
 $_SESSION['last_transaction'] = [
     'id' => $transactionId,

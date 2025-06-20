@@ -349,10 +349,12 @@
 		const val = $(this).val();
 		if (val === 'delivery') {
 			$('#zoneContainer').show();
+			$('#deliveryZone').attr('required', true);
 		} else {
 			$('#zoneContainer').hide();
 			$('#deliveryZone').val('');
-			// Reset total jadi hanya produk
+			$('#deliveryZone').removeAttr('required');
+
 			const base = parseInt($('.total').val()) || 0;
 			$('.totalValue').text(formatRupiah(base));
 			$('#totalOrderSummary').val(base);

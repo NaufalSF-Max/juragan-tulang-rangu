@@ -1,0 +1,12 @@
+[2025-06-20 05:57:04] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 05:57:04] ✅ Zona ditemukan: Luar Zona / Jabodetabek, Luar Area, Fee: 30000
+[2025-06-20 05:57:04] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 05:57:04] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 05:57:04] VALUES DEBUG: ["INV\/20250620\/0005","CSTJTR1","ferdi","62859121392342","frdynsh11@gmail.com","Cirebon barat - Zone: Luar Zona \/ Jabodetabek Luar Area","enak","COD","Delivery",30000,45000,18]
+[2025-06-20 05:57:10] UltraMsg Response: {"sent":"true","message":"ok","id":11}
+[2025-06-20 06:10:07] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 06:10:07] ✅ Zona ditemukan: Cilamaya, Karawang, Fee: 15000
+[2025-06-20 06:10:07] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 06:10:07] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 06:10:07] VALUES DEBUG: ["INV\/20250620\/0021","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Iwjsnndn - Zone: Cilamaya Karawang","cepet dateng bang","Online","Delivery",15000,27000,6]
+[2025-06-20 06:10:11] UltraMsg Response: {"sent":"true","message":"ok","id":12}

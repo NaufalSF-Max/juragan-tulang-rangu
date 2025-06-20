@@ -1,35 +1,49 @@
 <?php
-
-use Foodboard\Config;
-use Foodboard\CheckoutService;
+session_start();
+use JuraganTulangRangu\Config;
 
 session_start();
 require_once __DIR__ . '/Config/Config.php';
+require_once __DIR__ . '/../database/db.php';
 
-if (!empty($_SESSION["foodboard-cart"])) {
+$invoiceId = $_GET['invoice_id'] ?? $_SESSION['last_invoice_id'] ?? null;
+unset($_SESSION['last_invoice_id']); // agar tidak diakses ulang
 
-    $cartItemsArray = $_SESSION["foodboard-cart"]["items"];
-    $customerDetailsArray = $_SESSION["foodboard-cart"]["customerDetails"];
-    $subject = Config::ORDER_EMAIL_SUBJECT;
-    require_once __DIR__ . '/Service/CheckoutService.php';
-    $checkoutModel = new CheckoutService();
-
-    $recipientArr = array(
-        $_SESSION["foodboard-cart"]["customerDetails"]["email"] => $_SESSION["foodboard-cart"]["customerDetails"]["email"]
-    );
-
-    if (!empty(Config::RECIPIENT_EMAIL)) {
-        $recipientCCArr = array(
-            Config::RECIPIENT_EMAIL => Config::RECIPIENT_EMAIL
-        );
-    }
-
-
-    $shippingAmount = $_SESSION["foodboard-cart"]["shippingAmount"];
-    $checkoutService = $checkoutModel->sendOrderEmail($subject, $cartItemsArray, $shippingAmount, $customerDetailsArray, $recipientArr, $recipientCCArr);
-} else {
-    header("Location:" . Config::APP_ROOT . Config::WORK_ROOT . "pay-with-cash-on-delivery/order.php");
+if (!$invoiceId) {
+    echo "<h2>Transaksi tidak ditemukan</h2>";
+    exit;
 }
+
+$stmt = $conn->prepare("SELECT * FROM transactions WHERE id = ?");
+$stmt->bind_param("s", $invoiceId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    echo "<h2>Transaksi tidak ditemukan</h2>";
+    exit;
+}
+
+$trans = $result->fetch_assoc();
+$stmt->close();
+
+// Coba ambil data dari session jika ada
+if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] === $invoiceId) {
+    $items = $_SESSION['last_transaction']['items'];
+    $subtotal = $_SESSION['last_transaction']['total'] - $_SESSION['last_transaction']['delivery_fee'];
+    $ongkir = $_SESSION['last_transaction']['delivery_fee'];
+    $total = $_SESSION['last_transaction']['total'];
+
+    // Hapus dari session agar tidak menumpuk
+    unset($_SESSION['last_transaction']);
+} else {
+    // Tidak ada data di session, fallback manual (jika kelak ada tabel transaction_items)
+    $items = []; // Atau beri pesan "tidak bisa tampilkan detail"
+    $subtotal = $trans['total_price'] - $trans['delivery_fee'];
+    $ongkir = $trans['delivery_fee'];
+    $total = $trans['total_price'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -39,18 +53,18 @@ if (!empty($_SESSION["foodboard-cart"])) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Food order wizard with online payment">
-    <meta name="author" content="UWS">
-    <title>FoodBoard | Thank you</title>
+    <meta name="description" content="Guide to ordering food with online payment">
+    <meta name="author" content="Juragan Tulang Rangu Karawang">
+    <title>Juragan Tulang Rangu Karawang</title>
 
     <!-- Favicon -->
-    <link href="../img/favicon.png" rel="shortcut icon">
+    <link href="../img/logo.svg" rel="shortcut icon">
 
     <!-- Google Fonts - Jost -->
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome CSS -->
-    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" >
 
     <!-- Custom Font Icons -->
     <link href="../vendor/icomoon/css/iconfont.min.css" rel="stylesheet">
@@ -64,6 +78,7 @@ if (!empty($_SESSION["foodboard-cart"])) {
     <link href="../vendor/float-labels/css/float-labels.min.css" rel="stylesheet">
 
     <!-- Main CSS -->
+    <link href="./../css/responsive.css" rel="stylesheet">
     <link href="./../css/style.css" rel="stylesheet">
 </head>
 
@@ -90,39 +105,48 @@ if (!empty($_SESSION["foodboard-cart"])) {
                 <div class="row">
                     <div class="col-lg-3 col-6">
                         <div id="logo">
-                            <h1><a href="https://ultimatewebsolutions.net/foodboard/" title="FoodBoard">FoodBoard</a></h1>
+                            <h1><a href="../index.php" title="logo">Juragan Tulang Rangu</a></h1>
                         </div>
                     </div>
                     <div class="col-lg-9 col-6">
                         <ul id="menuIcons">
-                            <li><a href="#"><i class="icon icon-support"></i></a></li>
-                            <li><a href="#"><i class="icon icon-shopping-cart2"></i></a></li>
-                        </ul>
+							<?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'customer'): ?>
+							<li class="nav-item dropdown d-flex align-items-center">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-3" 
+                                    href="#" 
+                                    id="userDropdown" 
+                                    role="button" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false"
+                                    style="font-weight: 500; font-size: 16px; color: #800040;">
+                                    <i class="fas fa-user me-1 margin-right: 12px;" style="font-size: 18px;"></i><?= htmlspecialchars($_SESSION['user']['username']) ?>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="../database/profil.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="../database/logout.php">Logout</a></li>
+                                </ul>
+							</li>
+							<?php else: ?>
+								<li><a href="../database/login.php"><i class="fas fa-user"></i></a></li>
+							<?php endif; ?>
+						</ul>
                         <!-- Menu -->
                         <nav id="menu" class="main-menu">
                             <ul>
-                                <li><span><a href="https://ultimatewebsolutions.net/foodboard/">Home</a></span></li>
+                                <li><span><a href="../index.php">Home</a></span></li>
                                 <li>
                                     <span><a href="#">Order <i class="fa fa-chevron-down"></i></a></span>
                                     <ul>
                                         <li>
-                                            <span><a href="#">Pay online</a></span>
-                                            <ul>
-                                                <li><a href="../pay-with-card-online/">Demo 1 - Filtering</a></li>
-                                                <li><a href="../pay-with-card-online/order-2.php">Demo 2 - Sticky navigation</a></li>
-                                            </ul>
+                                            <a href="../pay-with-card-online/index.php">Pay online</a>                                        
                                         </li>
                                         <li>
-                                            <span><a href="#">Pay with cash</a></span>
-                                            <ul>
-                                                <li><a href="../pay-with-cash-on-delivery/">Demo 1 - Filtering</a></li>
-                                                <li><a href="../pay-with-cash-on-delivery/order-2.php">Demo 2 - Sticky navigation</a></li>
-                                            </ul>
+                                            <a href="../pay-with-cash-on-delivery/index.php">Pay with cash</a>                                            
                                         </li>
                                     </ul>
                                 </li>
-                                <li><span><a href="../faq.html">Faq</a></span></li>
-                                <li><span><a href="../contacts.html">Contacts</a></span></li>
+                                <li><span><a href="../faq.php">Faq</a></span></li>
+                                <li><span><a href="../contacts.php">Contacts</a></span></li>
                             </ul>
                         </nav>
                         <!-- Menu End -->
@@ -150,62 +174,55 @@ if (!empty($_SESSION["foodboard-cart"])) {
                         <!-- Left Sidebar -->
                         <div class="col-lg-12" id="mainContent">
                             <!-- Filter Area -->
-                            <h3>Thank you! Ordered items:</h3>
+                            <h3>🎉 Terima kasih! Berikut detail pesanan Anda:</h3>
                             <table class="tbl-cart" cellpadding="10" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="text-left"><?php echo "Title"; ?></th>
-                                        <th class="table-th"><?php echo "Unit Price"; ?>
-                                            (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
-                                        <th class="table-th"><?php echo "Quantity"; ?></th>
-                                        <th class="table-th"><?php echo "Total Price"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
+                                        <th class="text-left">Produk</th>
+                                        <th class="table-th">Harga Satuan (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
+                                        <th class="table-th">Jumlah</th>
+                                        <th class="table-th">Subtotal (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    <?php
-                                    foreach ($cartItemsArray as $cartItems) {
-                                        foreach ($cartItems as $k => $v) {
-                                            $productTitle = $cartItems[$k]["name"];
-                                            $price = $cartItems[$k]["unit_price"];
-                                    ?>
-                                            <tr class="product-title-resp">
-                                                <td class="text-left"><span class="inline-block title-width"><?php echo $productTitle; ?></span></td>
-                                                <td data-label="Price" class="table-td"><?php echo number_format($price, 2); ?></td>
-                                                <td data-label="Quantity" class="table-td"><?php echo $cartItems[$k]['quantity']; ?></td>
-                                                <td data-label="Total" class="table-td"><?php echo number_format($price * $cartItems[$k]['quantity'], 2); ?></td>
-
-                                            </tr>
-                                        <?php
-                                            $total_price_array[] = $price * $cartItems[$k]['quantity'];
-                                        }
-                                    }
-                                    $sub_total_price = array_sum($total_price_array);
-                                    if (!empty($shippingAmount)) {
-                                        $total_price = $sub_total_price + $shippingAmount;
-                                        ?>
-                                        <tr class="sub_total">
-                                            <td class="grand-resp" align="right" colspan="2"><strong><?php echo "Delivery Fee"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
-                                            <td data-label="Shipping Total" align="right" colspan="3"><strong><?php echo number_format($shippingAmount, 2); ?></strong></td>
-                                        </tr>
-                                    <?php
-                                    } else {
-                                        $total_price = $sub_total_price;
-                                    }
-                                    ?>
-                                    <tr class="sub_total">
-                                        <td class="grand-resp" align="right" colspan="2"><strong><?php echo "Grand Total"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
-                                        <td data-label="Grand Total" align="right" colspan="3"><strong><?php echo number_format($total_price, 2); ?></strong></td>
+                                <?php foreach ($items as $item): ?>
+                                    <tr>
+                                        <td class="text-left">
+                                            <?php
+                                                // Tampilkan: Produk + (Extra: ...)
+                                                $fullName = htmlspecialchars($item['name']);
+                                                if (!empty($item['extras'])) {
+                                                    $fullName .= ' (Extra: ' . htmlspecialchars(implode(', ', $item['extras'])) . ')';
+                                                }
+                                                echo $fullName;
+                                            ?>
+                                        </td>
+                                        <td class="table-td"><?php echo number_format($item['price'], 0, ',', '.'); ?></td>
+                                        <td class="table-td"><?php echo $item['quantity']; ?></td>
+                                        <td class="table-td"><?php echo number_format($item['subtotal'], 0, ',', '.'); ?></td>
                                     </tr>
-                                </tbody>
+                                <?php endforeach; ?>
+                                <tr class="sub_total">
+                                    <td colspan="3" align="right"><strong>Ongkos Kirim (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
+                                    <td class="table-td"><?php echo number_format($ongkir ?? 0, 0, ',', '.'); ?></td>
+                                </tr>
+                                <tr class="sub_total">
+                                    <td colspan="3" align="right"><strong>Total (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
+                                    <td class="table-td"><?php echo number_format($total, 0, ',', '.'); ?></td>
+                                </tr>
+                            </tbody>
                             </table>
-                            <h3>Customer details:</h3>
-                            <?php foreach ($customerDetailsArray as $k => $v) { ?>
-                                <div>
-                                    <strong><?php echo ucfirst($k); ?>: </strong><span><?php echo $v; ?></span>
-                                </div>
-                            <?php } ?>
-                            <p class="mb-0"><a href="https://ultimatewebsolutions.net/foodboard/" class="btn-2">Back to Home</a></p>
+                            <h3>📝 Detail Pembeli:</h3>
+                            <ul>
+                                <li><strong>Nama:</strong> <?php echo htmlspecialchars($trans['full_name']); ?></li>
+                                <li><strong>Email:</strong> <?php echo htmlspecialchars($trans['email']); ?></li>
+                                <li><strong>Telepon:</strong> <?php echo htmlspecialchars($trans['phone']); ?></li>
+                                <li><strong>Alamat:</strong> <?php echo htmlspecialchars($trans['delivery_address']); ?></li>
+                                <li><strong>Metode Pembayaran:</strong> <?php echo htmlspecialchars($trans['payment_method']); ?></li>
+                                <li><strong>Metode Pengiriman:</strong> <?php echo htmlspecialchars($trans['delivery_method']); ?></li>
+                                <li><strong>Pesan:</strong> <?php echo htmlspecialchars($trans['message']); ?></li>
+                            </ul>
+                            <p class="mb-0"><a href="../" class="btn-2">Back to Home</a></p>
                         </div>
                     </div>
                 </div>
@@ -214,58 +231,58 @@ if (!empty($_SESSION["foodboard-cart"])) {
         <!-- Main End -->
 
         <!-- Footer -->
-        <footer class="main-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3">
-                        <h5 class="footer-heading">Menu Links</h5>
-                        <ul class="list-unstyled nav-links">
-                            <li><i class="fa fa-angle-right"></i> <a href="https://ultimatewebsolutions.net/foodboard/" class="footer-link">Home</a></li>
-                            <li><i class="fa fa-angle-right"></i> <a href="../faq.html" class="footer-link">FAQ</a></li>
-                            <li><i class="fa fa-angle-right"></i> <a href="../contacts.html" class="footer-link">Contacts</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <h5 class="footer-heading">Order Wizard</h5>
-                        <ul class="list-unstyled nav-links">
-                            <li><i class="fa fa-angle-right"></i> <a href="../pay-with-card-online/" class="footer-link">Pay online</a></li>
-                            <li><i class="fa fa-angle-right"></i> <a href="../pay-with-cash-on-delivery/" class="footer-link">Pay with cash on delivery</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h5 class="footer-heading">Contacts</h5>
-                        <ul class="list-unstyled contact-links">
-                            <li><i class="icon icon-map-marker"></i><a href="https://goo.gl/maps/vKgGyZe2JSRLDnYH6" class="footer-link" target="_blank">Address: 1234 Street Name, City Name, USA</a>
-                            </li>
-                            <li><i class="icon icon-envelope3"></i><a href="mailto:info@yourdomain.com" class="footer-link">Mail: info@yourdomain.com</a></li>
-                            <li><i class="icon icon-phone2"></i><a href="tel:+3630123456789" class="footer-link">Phone: +3630123456789</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-2">
-                        <h5 class="footer-heading">Find Us On</h5>
-                        <ul class="list-unstyled social-links">
-                            <li><a href="https://facebook.com" class="social-link" target="_blank"><i class="icon icon-facebook"></i></a></li>
-                            <li><a href="https://twitter.com" class="social-link" target="_blank"><i class="icon icon-twitter"></i></a></li>
-                            <li><a href="https://instagram.com" class="social-link" target="_blank"><i class="icon icon-instagram"></i></a></li>
-                            <li><a href="https://pinterest.com" class="social-link" target="_blank"><i class="icon icon-pinterest"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-8">
-                        <ul id="subFooterLinks">
-                            <li><a href="https://themeforest.net/user/ultimatewebsolutions" target="_blank">With <i class="fa fa-heart pulse"></i> by UWS</a></li>
-                            <li><a href="../pdf/terms.pdf" target="_blank">Terms and conditions</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <div id="copy">© 2021 FoodBoard</div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- Footer End -->
+		<footer class="main-footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+						<h5 class="footer-heading">Menu Links</h5>
+						<ul class="list-unstyled nav-links">
+							<li><i class="fa fa-angle-right"></i> <a href="../index.php" class="footer-link">Home</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="../faq.php" class="footer-link">FAQ</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="../contacts.php" class="footer-link">Contacts</a></li>
+						</ul>
+					</div>
+					<div class="col-md-3">
+						<h5 class="footer-heading">Order</h5>
+						<ul class="list-unstyled nav-links">
+							<li><i class="fa fa-angle-right"></i> <a href="../pay-with-card-online/index.php" class="footer-link">Pay online</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="../pay-with-cash-on-delivery/index.php" class="footer-link">Pay with cash on delivery</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<h5 class="footer-heading">Contacts</h5>
+						<ul class="list-unstyled contact-links">
+							<li><i class="icon icon-map-marker"></i><a href="https://maps.app.goo.gl/3kMUttsyy6Fy6rXi8" class="footer-link" target="_blank">Address: Stadion Singaperbangsa, Karawang</a></li>
+							<li><i class="icon icon-envelope3"></i><a href="mailto:tulangrangukarawang@gmail.com" class="footer-link">Mail: tulangrangukarawang@gmail.com</a></li>
+							<li><i class="icon icon-phone2"></i><a href="tel:+6285817128530" class="footer-link">Phone: +6285817128530</a></li>
+						</ul>
+					</div>
+					<div class="col-md-2">
+						<h5 class="footer-heading">Find Us On</h5>
+						<ul class="list-unstyled social-links">
+							<li><a href="https://www.facebook.com/share/18uqwzb3FC/" class="social-link" target="_blank"><i class="fab fa-facebook"></i></a></li>
+							<li><a href="https://wa.me/6285817128530" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a></li>
+							<li><a href="https://instagram.com/tulangrangu_karawang" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a></li>
+							<li><a href="https://tiktok.com/@tulangrangu_karawangg" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-md-8">
+						<ul id="subFooterLinks">
+							<li><a href="../img/kelompok2.jpg" target="_blank">With <i class="fa fa-heart pulse"></i> by Kelompok 2</a></li>
+							<li><a href="../pdf/terms.pdf" target="_blank">Terms and conditions</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<div id="copy">© 2025 Juragan Tulang Rangu Karawang
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!-- Footer End -->
 
     </div>
     <!-- Page End -->
@@ -291,8 +308,7 @@ if (!empty($_SESSION["foodboard-cart"])) {
 
     <!-- Main Javascript File -->
     <script src="../js/scripts.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
-<?php unset($_SESSION["foodboard-cart"]); ?>

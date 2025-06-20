@@ -1,13 +1,10 @@
 <?php
 
-
-
-use Foodboard\Config;
+use JuraganTulangRangu\Config;
 
 function getOrderBody($cartItemsArray, $customerDetailsArray, $shippingAmount)
 {
     ob_start();
-
 ?>
 
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -38,72 +35,88 @@ function getOrderBody($cartItemsArray, $customerDetailsArray, $shippingAmount)
                                     <meta itemprop='name' content='Confirm Email' />
                                     <table width='100%' cellpadding='0' cellspacing='0'>
                                         <tr>
-                                            <td><?php if (!empty($cartItemsArray)) { ?>
-                                                    <div style="padding: 10px 10px 10px 10px;"></div>
-
+                                            <td>
+                                                <?php if (!empty($cartItemsArray)) { ?>
+                                                    <div style="padding: 10px;"></div>
                                                     <div>
-                                                        <h3>
-                                                            <h3>Thank you for your order!</h3>
-                                                            <div>
-                                                                <h5>Your ordered items are:</h5>
-                                                            </div>
-                                                            <table style="border: 1px solid #E0E0E0; border-radius: 3px;" cellpadding="10" cellspacing="0">
-                                                                <tbody style="border: 1px solid #E0E0E0; border-radius: 3px; margin: 10px 0; padding: 10px;">
-                                                                    <tr>
-                                                                        <th style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: left" width="45%"><?php echo "Title"; ?></th>
-                                                                        <th style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: right" width="15%"><?php echo "Unit Price"; ?>
-                                                                            (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
-                                                                        <th style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: right" width="15%"><?php echo "Quantity"; ?></th>
-                                                                        <th style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; text-align: right" width="15%"><?php echo "Total Price"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</th>
-                                                                    </tr>
-                                                                    <?php
-                                                                    foreach ($cartItemsArray as $cartItems) {
-                                                                        foreach ($cartItems as $k => $v) {
-                                                                            $productTitle = $cartItems[$k]["name"];
-                                                                            $price = $cartItems[$k]["unit_price"];
-                                                                    ?>
-                                                                            <tr class="product-title-resp">
-                                                                                <td style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid;"><?php echo $productTitle; ?></td>
-                                                                                <td data-label="Price" style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: right"><?php echo number_format($price, 2); ?></td>
-                                                                                <td data-label="Quantity" style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: right"><?php echo $cartItems[$k]['quantity']; ?></td>
-                                                                                <td data-label="Total" style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; text-align: right"><?php echo number_format($price * $cartItems[$k]['quantity'], 2); ?></td>
+                                                        <h3>Thank you for your order!</h3>
+                                                        <div>
+                                                            <h5>Your ordered items are:</h5>
+                                                        </div>
+                                                        <table style="border: 1px solid #E0E0E0; border-radius: 3px;" cellpadding="10" cellspacing="0">
+                                                            <tbody style="border: 1px solid #E0E0E0; border-radius: 3px;">
+                                                                <tr>
+                                                                    <th style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: left" width="45%">Title</th>
+                                                                    <th style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: right" width="15%">Unit Price (<?= Config::CURRENCY_SYMBOL ?>)</th>
+                                                                    <th style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: right" width="15%">Quantity</th>
+                                                                    <th style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; text-align: right" width="15%">Total Price (<?= Config::CURRENCY_SYMBOL ?>)</th>
+                                                                </tr>
+                                                                <?php
+                                                                $total_price_array = [];
 
-                                                                            </tr>
-                                                                        <?php
-                                                                            $total_price_array[] = $price * $cartItems[$k]['quantity'];
+                                                                foreach ($cartItemsArray as $item) {
+                                                                    $title = $item['name'];
+                                                                    $variant = $item['variant'];
+                                                                    $qty = $item['quantity'];
+                                                                    $basePrice = (int)$item['price'];
+
+                                                                    $extraPrice = 0;
+                                                                    $extraLabels = [];
+
+                                                                    if (!empty($item['extras'])) {
+                                                                        if (!empty($item['extras']) && is_array($item['extras'])) {
+                                                                        foreach ($item['extras'] as $extraLabel) {
+                                                                            $extraPrice += 0; // Harga sudah include
+                                                                            $extraLabels[] = $extraLabel;
                                                                         }
                                                                     }
-                                                                    $sub_total_price = array_sum($total_price_array);
-                                                                    if (!empty($shippingAmount)) {
-                                                                        $total_price = $sub_total_price + $shippingAmount;
-                                                                        ?>
-                                                                        <tr class="sub_total">
-                                                                            <td style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; border-right: 1px #E0E0E0 solid; text-align: right" align="right" colspan="2"><strong><?php echo "Delivery Fee"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
-                                                                            <td style="padding: 5px 10px; border-bottom: 1px #E0E0E0 solid; text-align: right" align="right" data-label="Shipping Total" colspan="3"><strong><?php echo number_format($shippingAmount, 2); ?></strong></td>
-                                                                        </tr>
-                                                                    <?php
-                                                                    } else {
-                                                                        $total_price = $sub_total_price;
                                                                     }
-                                                                    ?>
-                                                                    <tr class="sub_total">
-                                                                        <td style="padding: 5px 10px; text-align: right" align="right" colspan="2"><strong><?php echo "Grand Total"; ?> (<?php echo Config::CURRENCY_SYMBOL; ?>)</strong></td>
-                                                                        <td style="padding: 5px 10px; text-align: right" align="right" data-label="Grand Total" colspan="3"><strong><?php echo number_format($total_price, 2); ?></strong></td>
+
+                                                                    $unitPrice = $basePrice + $extraPrice;
+                                                                    $lineTotal = $unitPrice * $qty;
+                                                                    $total_price_array[] = $lineTotal;
+
+                                                                    $titleFull = $title . " - " . $variant;
+                                                                    if (!empty($extraLabels)) {
+                                                                        $titleFull .= "<br><small>Extras: " . implode(', ', $extraLabels) . "</small>";
+                                                                    }
+                                                                ?>
+                                                                    <tr>
+                                                                        <td style="padding: 5px 10px; border-bottom: 1px solid #E0E0E0; border-right: 1px solid #E0E0E0;"><?php echo $titleFull; ?></td>
+                                                                        <td style="padding: 5px 10px; border-bottom: 1px solid #E0E0E0; border-right: 1px solid #E0E0E0; text-align: right;"><?php echo number_format($unitPrice, 2); ?></td>
+                                                                        <td style="padding: 5px 10px; border-bottom: 1px solid #E0E0E0; border-right: 1px solid #E0E0E0; text-align: right;"><?php echo $qty; ?></td>
+                                                                        <td style="padding: 5px 10px; border-bottom: 1px solid #E0E0E0; text-align: right;"><?php echo number_format($lineTotal, 2); ?></td>
                                                                     </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            <h3>Customer details:</h3>
-                                                            <?php
-                                                            $email = "";
-                                                            foreach ($customerDetailsArray as $k => $v) {
-                                                                if ($k == "email") {
-                                                                    $email = $v;
-                                                                }
-                                                            ?>
-                                                                <div>
-                                                                    <strong><?php echo ucfirst($k); ?>: </strong><span><?php echo $v; ?></span>
-                                                                </div>
-                                                            <?php } ?>
+                                                                <?php } ?>
+
+                                                                <?php
+                                                                $sub_total_price = array_sum($total_price_array);
+                                                                $total_price = $sub_total_price + $shippingAmount;
+                                                                ?>
+
+                                                                <tr class="sub_total">
+                                                                    <td colspan="2" style="padding: 5px 10px; border-bottom: 1px solid #E0E0E0; text-align: right"><strong>Delivery Fee (<?= Config::CURRENCY_SYMBOL ?>)</strong></td>
+                                                                    <td colspan="2" style="padding: 5px 10px; border-bottom: 1px solid #E0E0E0; text-align: right"><strong><?php echo number_format($shippingAmount, 2); ?></strong></td>
+                                                                </tr>
+                                                                <tr class="sub_total">
+                                                                    <td colspan="2" style="padding: 5px 10px; text-align: right"><strong>Grand Total (<?= Config::CURRENCY_SYMBOL ?>)</strong></td>
+                                                                    <td colspan="2" style="padding: 5px 10px; text-align: right"><strong><?php echo number_format($total_price, 2); ?></strong></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <h3>Customer details:</h3>
+                                                        <?php
+                                                        $email = "";
+                                                        foreach ($customerDetailsArray as $k => $v) {
+                                                            if ($k == "email") {
+                                                                $email = $v;
+                                                            }
+                                                        ?>
+                                                            <div>
+                                                                <strong><?php echo ucfirst($k); ?>: </strong><span><?php echo htmlspecialchars($v); ?></span>
+                                                            </div>
+                                                        <?php } ?>
                                                     </div>
                                                 <?php } ?>
                                             </td>
@@ -113,18 +126,11 @@ function getOrderBody($cartItemsArray, $customerDetailsArray, $shippingAmount)
                             </tr>
                         </table>
                         <div width='100%' cellpadding='0' cellspacing='0' style="margin-top: 20px; padding: 20px; background-color: #fff;">
-                            <p>If you have questions about your order or
-                                general feedback, please contact us.</p>
-                            </hr>
-                            <i>This email was sent to
-                                <?php if (!empty($email)) {
-                                    echo $email;
-                                }
-                                ?>.
-                                This email is an order confirmation and product delivery email, for the purchase made. It is
-                                not a marketing or promotional email and that is why this email
-                                does not contain an unsubscribe link. Still you have the option
-                                to register your grievance via contact form.</i>
+                            <p>If you have questions about your order or general feedback, please contact us.</p>
+                            <hr />
+                            <i>This email was sent to <?= htmlspecialchars($email) ?>.
+                                This email is an order confirmation and product delivery email.
+                                It is not a marketing or promotional email and does not contain an unsubscribe link.</i>
                         </div>
                     </div>
                 </td>
@@ -136,7 +142,6 @@ function getOrderBody($cartItemsArray, $customerDetailsArray, $shippingAmount)
     </html>
 
 <?php
-
     return ob_get_clean();
 }
 ?>
