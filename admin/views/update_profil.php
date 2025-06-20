@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../db/db.php';
+include '../../database/db.php';
 
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
   header("Location: login.php");
@@ -17,10 +17,7 @@ $stmt = $conn->prepare("UPDATE users SET email = ?, phone = ?, address = ? WHERE
 $stmt->bind_param("ssss", $email, $phone, $address, $id);
 
 if ($stmt->execute()) {
-  $_SESSION['user']['email'] = $email;
-  $_SESSION['user']['phone'] = $phone;
-  $_SESSION['user']['address'] = $address;
-  header("Location: profile.php?success=1");
+  echo "<script>alert('Profil berhasil diperbarui!'); window.location.href = 'profil.php';</script>";
 } else {
   echo "Gagal update profil";
 }

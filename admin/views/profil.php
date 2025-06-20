@@ -49,7 +49,7 @@ $stmt->close();
     </form>
     <!-- Tambahkan tombol ubah password -->
     <a href="change_password.php" class="password-link"> Ubah Password</a>
-    <a href="view_add_product.php">← Kembali ke Dashboard</a>
+    <a href="view_add_product.php"> Kembali ke Dashboard</a>
   </div>
 </body>
 </html>
