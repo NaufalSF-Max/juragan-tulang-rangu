@@ -78,10 +78,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = ucfirst($role) . " successfully registered.";
         $type = "success";
     
-        echo "<pre>";
-        print_r($_SESSION['user']);
-        echo "</pre>";
-        exit;
+        // echo "<pre>";
+        // print_r($_SESSION['user']);
+        // echo "</pre>";
+        // exit;
 
         // Opsional: redirect ke halaman profil
         header("Location: admin/views/profil.php");

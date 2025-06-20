@@ -8,7 +8,8 @@ $success = "";
 // ==== Cek Remember Me ====
 if (!isset($_SESSION['user']) && isset($_COOKIE['remember_token'])) {
   $token = $_COOKIE['remember_token'];
-  $stmt = $conn->prepare("SELECT id, username, role FROM users WHERE remember_token=?");
+  $stmt = $conn->prepare("SELECT id, username, email, phone, address, role FROM users WHERE remember_token=?");
+
   $stmt->bind_param("s", $token);
   $stmt->execute();
   $stmt->store_result();
