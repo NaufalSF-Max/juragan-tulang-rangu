@@ -262,3 +262,10 @@
 [2025-06-20 05:36:11] 🧪 Apakah CSTJTR1 ditemukan? YA
 [2025-06-20 05:36:11] VALUES DEBUG: ["INV\/20250620\/0004","CSTJTR1","ferdi","62859121392342","frdynsh11@gmail.com","Cirebon barat - Zone: Luar Zona \/ Jabodetabek Luar Area","enak","COD","Delivery",30000,40000,18]
 [2025-06-20 05:36:16] UltraMsg Response: {"sent":"true","message":"ok","id":10}
+[2025-06-20 06:17:52] DEBUG: $_SESSION[user][id] = ADMNJTR2
+[2025-06-20 06:17:52] ✅ Zona ditemukan: Luar Zona / Jabodetabek, Luar Area, Fee: 30000
+[2025-06-20 06:17:52] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 06:17:52] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 06:17:52] VALUES DEBUG: ["INV\/20250620\/0006","ADMNJTR2","bagus","62859121392342","frdynsh11@gmail.com","Cirebon - Zone: Luar Zona \/ Jabodetabek Luar Area","mantap","COD","Delivery",30000,70000,18]
+[2025-06-20 06:17:52] 📊 Rekap harian DIBUAT untuk 2025-06-20: Produk=40000, Ongkir=30000
+[2025-06-20 06:17:57] UltraMsg Response: {"sent":"true","message":"ok","id":13}

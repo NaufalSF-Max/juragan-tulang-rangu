@@ -34,6 +34,11 @@ function isActive($page) {
             </a>
         </li>
         <li>
+            <a href="finance_history.php" class="nav-link <?= isActive('transaction_history.php') ?>">
+                <i class="fas fa-history me-2"></i> Pencatatan Keuangan
+            </a>
+        </li>
+        <li>
             <a href="register_user_view.php" class="nav-link <?= isActive('register_internal.php') ?>">
                 <i class="fas fa-user-plus me-2"></i> Register Karyawan
             </a>
