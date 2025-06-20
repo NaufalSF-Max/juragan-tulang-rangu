@@ -250,14 +250,9 @@
 	<script src="vendor/lazyload/js/lazyload.min.js"></script>
 	<script src="vendor/sticky-kit/js/sticky-kit.min.js"></script>
 
-	<!-- Map -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjiJtKE8Hw8niYWNvbmZFt0_dh1dfaoVA"></script>
-	<script src="vendor/infobox/js/infobox.js"></script>
-	<script src="js/map.js"></script>
-
 	<!-- Main Javascript File -->
 	<script src="js/scripts.js"></script>
-
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -238,3 +238,27 @@
 [2025-06-20 01:18:25] 🧪 Apakah CSTJTR1 ditemukan? YA
 [2025-06-20 01:18:25] VALUES DEBUG: ["INV\/20250620\/0020","CSTJTR1","Naufal Syafiq Fadhillah","62859121392342","naufalsafiqq@gmail.com","Jakarta","cepet datang","COD","Pickup",0,27000,null]
 [2025-06-20 01:18:29] UltraMsg Response: {"sent":"true","message":"ok","id":6}
+[2025-06-20 04:21:08] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 04:21:08] ✅ Zona ditemukan: Luar Zona / Jabodetabek, Luar Area, Fee: 30000
+[2025-06-20 04:21:08] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 04:21:08] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 04:21:08] VALUES DEBUG: ["INV\/20250620\/0001","CSTJTR1","ferdi","62859121392342","frdynsh11@gmail.com","Cirebon barat - Zone: Luar Zona \/ Jabodetabek Luar Area","enak","COD","Delivery",30000,40000,18]
+[2025-06-20 04:21:13] UltraMsg Response: {"sent":"true","message":"ok","id":7}
+[2025-06-20 04:46:45] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 04:46:45] 🛍️ Pickup dipilih, fee di-set 0 dan zone_id diabaikan
+[2025-06-20 04:46:45] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 04:46:45] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 04:46:45] VALUES DEBUG: ["INV\/20250620\/0002","CSTJTR1","ferdi","62859121392342","frdynsh11@gmail.com","Cirebon barat","enak","COD","Pickup",0,5000,null]
+[2025-06-20 04:46:50] UltraMsg Response: {"sent":"true","message":"ok","id":8}
+[2025-06-20 04:53:00] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 04:53:00] ✅ Zona ditemukan: Luar Zona / Jabodetabek, Luar Area, Fee: 30000
+[2025-06-20 04:53:00] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 04:53:00] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 04:53:00] VALUES DEBUG: ["INV\/20250620\/0003","CSTJTR1","ferdi","62859121392342","frdynsh11@gmail.com","Cirebon barat - Zone: Luar Zona \/ Jabodetabek Luar Area","enak","COD","Delivery",30000,52000,18]
+[2025-06-20 04:53:05] UltraMsg Response: {"sent":"true","message":"ok","id":9}
+[2025-06-20 05:36:11] DEBUG: $_SESSION[user][id] = CSTJTR1
+[2025-06-20 05:36:11] ✅ Zona ditemukan: Luar Zona / Jabodetabek, Luar Area, Fee: 30000
+[2025-06-20 05:36:11] 🧪 DATABASE AKTIF: juragan_tulang_rangu
+[2025-06-20 05:36:11] 🧪 Apakah CSTJTR1 ditemukan? YA
+[2025-06-20 05:36:11] VALUES DEBUG: ["INV\/20250620\/0004","CSTJTR1","ferdi","62859121392342","frdynsh11@gmail.com","Cirebon barat - Zone: Luar Zona \/ Jabodetabek Luar Area","enak","COD","Delivery",30000,40000,18]
+[2025-06-20 05:36:16] UltraMsg Response: {"sent":"true","message":"ok","id":10}

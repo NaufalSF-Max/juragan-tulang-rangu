@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 use JuraganTulangRangu\Config;
 
 session_start();
@@ -53,18 +53,18 @@ if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Food order wizard with online payment">
-    <meta name="author" content="UWS">
-    <title>FoodBoard | Thank you</title>
+    <meta name="description" content="Guide to ordering food with online payment">
+    <meta name="author" content="Juragan Tulang Rangu Karawang">
+    <title>Juragan Tulang Rangu Karawang</title>
 
     <!-- Favicon -->
-    <link href="../img/favicon.png" rel="shortcut icon">
+    <link href="../img/logo.svg" rel="shortcut icon">
 
     <!-- Google Fonts - Jost -->
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome CSS -->
-    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" >
 
     <!-- Custom Font Icons -->
     <link href="../vendor/icomoon/css/iconfont.min.css" rel="stylesheet">
@@ -78,6 +78,7 @@ if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] 
     <link href="../vendor/float-labels/css/float-labels.min.css" rel="stylesheet">
 
     <!-- Main CSS -->
+    <link href="./../css/responsive.css" rel="stylesheet">
     <link href="./../css/style.css" rel="stylesheet">
 </head>
 
@@ -104,39 +105,48 @@ if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] 
                 <div class="row">
                     <div class="col-lg-3 col-6">
                         <div id="logo">
-                            <h1><a href="https://ultimatewebsolutions.net/foodboard/" title="FoodBoard">FoodBoard</a></h1>
+                            <h1><a href="../index.php" title="logo">Juragan Tulang Rangu</a></h1>
                         </div>
                     </div>
                     <div class="col-lg-9 col-6">
                         <ul id="menuIcons">
-                            <li><a href="#"><i class="icon icon-support"></i></a></li>
-                            <li><a href="#"><i class="icon icon-shopping-cart2"></i></a></li>
-                        </ul>
+							<?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'customer'): ?>
+							<li class="nav-item dropdown d-flex align-items-center">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-3" 
+                                    href="#" 
+                                    id="userDropdown" 
+                                    role="button" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false"
+                                    style="font-weight: 500; font-size: 16px; color: #800040;">
+                                    <i class="fas fa-user me-1 margin-right: 12px;" style="font-size: 18px;"></i><?= htmlspecialchars($_SESSION['user']['username']) ?>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="../database/profil.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="../database/logout.php">Logout</a></li>
+                                </ul>
+							</li>
+							<?php else: ?>
+								<li><a href="../database/login.php"><i class="fas fa-user"></i></a></li>
+							<?php endif; ?>
+						</ul>
                         <!-- Menu -->
                         <nav id="menu" class="main-menu">
                             <ul>
-                                <li><span><a href="https://ultimatewebsolutions.net/foodboard/">Home</a></span></li>
+                                <li><span><a href="../index.php">Home</a></span></li>
                                 <li>
                                     <span><a href="#">Order <i class="fa fa-chevron-down"></i></a></span>
                                     <ul>
                                         <li>
-                                            <span><a href="#">Pay online</a></span>
-                                            <ul>
-                                                <li><a href="../pay-with-card-online/">Demo 1 - Filtering</a></li>
-                                                <li><a href="../pay-with-card-online/order-2.php">Demo 2 - Sticky navigation</a></li>
-                                            </ul>
+                                            <a href="../pay-with-card-online/index.php">Pay online</a>                                        
                                         </li>
                                         <li>
-                                            <span><a href="#">Pay with cash</a></span>
-                                            <ul>
-                                                <li><a href="../pay-with-cash-on-delivery/">Demo 1 - Filtering</a></li>
-                                                <li><a href="../pay-with-cash-on-delivery/order-2.php">Demo 2 - Sticky navigation</a></li>
-                                            </ul>
+                                            <a href="../pay-with-cash-on-delivery/index.php">Pay with cash</a>                                            
                                         </li>
                                     </ul>
                                 </li>
-                                <li><span><a href="../faq.html">Faq</a></span></li>
-                                <li><span><a href="../contacts.html">Contacts</a></span></li>
+                                <li><span><a href="../faq.php">Faq</a></span></li>
+                                <li><span><a href="../contacts.php">Contacts</a></span></li>
                             </ul>
                         </nav>
                         <!-- Menu End -->
@@ -221,58 +231,58 @@ if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] 
         <!-- Main End -->
 
         <!-- Footer -->
-        <footer class="main-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3">
-                        <h5 class="footer-heading">Menu Links</h5>
-                        <ul class="list-unstyled nav-links">
-                            <li><i class="fa fa-angle-right"></i> <a href="https://ultimatewebsolutions.net/foodboard/" class="footer-link">Home</a></li>
-                            <li><i class="fa fa-angle-right"></i> <a href="../faq.html" class="footer-link">FAQ</a></li>
-                            <li><i class="fa fa-angle-right"></i> <a href="../contacts.html" class="footer-link">Contacts</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <h5 class="footer-heading">Order Wizard</h5>
-                        <ul class="list-unstyled nav-links">
-                            <li><i class="fa fa-angle-right"></i> <a href="../pay-with-card-online/" class="footer-link">Pay online</a></li>
-                            <li><i class="fa fa-angle-right"></i> <a href="../pay-with-cash-on-delivery/" class="footer-link">Pay with cash on delivery</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h5 class="footer-heading">Contacts</h5>
-                        <ul class="list-unstyled contact-links">
-                            <li><i class="icon icon-map-marker"></i><a href="https://goo.gl/maps/vKgGyZe2JSRLDnYH6" class="footer-link" target="_blank">Address: 1234 Street Name, City Name, USA</a>
-                            </li>
-                            <li><i class="icon icon-envelope3"></i><a href="mailto:info@yourdomain.com" class="footer-link">Mail: info@yourdomain.com</a></li>
-                            <li><i class="icon icon-phone2"></i><a href="tel:+3630123456789" class="footer-link">Phone: +3630123456789</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-2">
-                        <h5 class="footer-heading">Find Us On</h5>
-                        <ul class="list-unstyled social-links">
-                            <li><a href="https://facebook.com" class="social-link" target="_blank"><i class="icon icon-facebook"></i></a></li>
-                            <li><a href="https://twitter.com" class="social-link" target="_blank"><i class="icon icon-twitter"></i></a></li>
-                            <li><a href="https://instagram.com" class="social-link" target="_blank"><i class="icon icon-instagram"></i></a></li>
-                            <li><a href="https://pinterest.com" class="social-link" target="_blank"><i class="icon icon-pinterest"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-8">
-                        <ul id="subFooterLinks">
-                            <li><a href="https://themeforest.net/user/ultimatewebsolutions" target="_blank">With <i class="fa fa-heart pulse"></i> by UWS</a></li>
-                            <li><a href="../pdf/terms.pdf" target="_blank">Terms and conditions</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <div id="copy">© 2021 FoodBoard</div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- Footer End -->
+		<footer class="main-footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+						<h5 class="footer-heading">Menu Links</h5>
+						<ul class="list-unstyled nav-links">
+							<li><i class="fa fa-angle-right"></i> <a href="../index.php" class="footer-link">Home</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="../faq.php" class="footer-link">FAQ</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="../contacts.php" class="footer-link">Contacts</a></li>
+						</ul>
+					</div>
+					<div class="col-md-3">
+						<h5 class="footer-heading">Order</h5>
+						<ul class="list-unstyled nav-links">
+							<li><i class="fa fa-angle-right"></i> <a href="../pay-with-card-online/index.php" class="footer-link">Pay online</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="../pay-with-cash-on-delivery/index.php" class="footer-link">Pay with cash on delivery</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<h5 class="footer-heading">Contacts</h5>
+						<ul class="list-unstyled contact-links">
+							<li><i class="icon icon-map-marker"></i><a href="https://maps.app.goo.gl/3kMUttsyy6Fy6rXi8" class="footer-link" target="_blank">Address: Stadion Singaperbangsa, Karawang</a></li>
+							<li><i class="icon icon-envelope3"></i><a href="mailto:tulangrangukarawang@gmail.com" class="footer-link">Mail: tulangrangukarawang@gmail.com</a></li>
+							<li><i class="icon icon-phone2"></i><a href="tel:+6285817128530" class="footer-link">Phone: +6285817128530</a></li>
+						</ul>
+					</div>
+					<div class="col-md-2">
+						<h5 class="footer-heading">Find Us On</h5>
+						<ul class="list-unstyled social-links">
+							<li><a href="https://www.facebook.com/share/18uqwzb3FC/" class="social-link" target="_blank"><i class="fab fa-facebook"></i></a></li>
+							<li><a href="https://wa.me/6285817128530" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a></li>
+							<li><a href="https://instagram.com/tulangrangu_karawang" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a></li>
+							<li><a href="https://tiktok.com/@tulangrangu_karawangg" class="social-link" target="_blank"><i class="fab fa-tiktok"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-md-8">
+						<ul id="subFooterLinks">
+							<li><a href="../img/kelompok2.jpg" target="_blank">With <i class="fa fa-heart pulse"></i> by Kelompok 2</a></li>
+							<li><a href="../pdf/terms.pdf" target="_blank">Terms and conditions</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<div id="copy">© 2025 Juragan Tulang Rangu Karawang
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!-- Footer End -->
 
     </div>
     <!-- Page End -->
@@ -298,12 +308,7 @@ if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] 
 
     <!-- Main Javascript File -->
     <script src="../js/scripts.js"></script>
-
-    <?php 
-        $invoiceId = $_SESSION['last_invoice_id'] ?? null;
-        unset($_SESSION['last_invoice_id']); // agar 1x pakai
-    ?>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
