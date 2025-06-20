@@ -1,6 +1,10 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../../database/db.php';
+require_once __DIR__ . '/../../Service/CheckoutService.php';
+require_once __DIR__ . '/../../Config/Config.php';
+
+use JuraganTulangRangu\CheckoutService;
 
 // DEBUG log file (letakkan paling atas)
 define('DEBUG', true);
@@ -110,6 +114,7 @@ while ($row = $result->fetch_assoc()) {
 	$total_products += $totalPerItem;
 
 	$items[] = [
+        'product_id' => $row['product_id'],
 		'name' => $row['product_name'],
 		'variant' => $row['option_id'],
 		'extras' => $extraLabels,
@@ -184,6 +189,7 @@ if (!$stmt->execute()) {
 }
 $stmt->close();
 
+
 $_SESSION['last_transaction'] = [
     'id' => $transactionId,
     'items' => $items,
@@ -198,16 +204,50 @@ $_SESSION['last_transaction'] = [
     'delivery_method' => $delivery_method
 ];
 
+$_SESSION['last_invoice_id'] = $transactionId;
+
+$checkoutService = new CheckoutService();
+
+$subject = "Pesanan Anda #$transactionId dari Juragan Tulang Rangu Karawang";
+
+$checkoutService->sendOrderEmail(
+    $subject,
+    $_SESSION['last_transaction']['items'],
+    $_SESSION['last_transaction']['delivery_fee'],
+    [
+        'name' => $_SESSION['last_transaction']['name'],
+        'email' => $_SESSION['last_transaction']['email'],
+        'phone' => $_SESSION['last_transaction']['phone'],
+        'address' => $_SESSION['last_transaction']['address'],
+        'message' => $_SESSION['last_transaction']['message'],
+        'payment_method' => $_SESSION['last_transaction']['payment_method'],
+        'delivery_method' => $_SESSION['last_transaction']['delivery_method']
+    ],
+    [$_SESSION['last_transaction']['email']], // recipient
+    [] // cc
+);
+
+// Ambil semua item dari cart user
+$cartQuery = $conn->prepare("SELECT product_id, quantity FROM carts WHERE user_id = ?");
+$cartQuery->bind_param("s", $userId);
+$cartQuery->execute();
+$cartResult = $cartQuery->get_result();
+
+while ($cartItem = $cartResult->fetch_assoc()) {
+    $productId = $cartItem['product_id'];
+    $quantity = $cartItem['quantity'];
+
+    // Kurangi stok di tabel products
+    $updateStockQuery = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+    $updateStockQuery->bind_param("ii", $quantity, $productId);
+    $updateStockQuery->execute();
+}
+
 // Hapus cart
 $del = $conn->prepare("DELETE FROM carts WHERE user_id = ?");
 $del->bind_param("s", $userId);
 $del->execute();
 $del->close();
-
-session_write_close(); //agar $_SESSION['last_transaction'] tersimpan sebelum redirect
-header("Location: ../../thank-you.php?invoice_id=$transactionId");
-exit;
-
 
 /// ================================
 // Kirim WhatsApp Invoice via UltraMSG
@@ -276,7 +316,7 @@ $waMessage .= "🌟 Semoga harimu menyenangkan dan pesananmu memuaskan! 🌟";
 
 // Kirim ke UltraMsg
 $params = array(
-	// 'token' => '67h0ks2kaofqoanl', // Ganti dengan token kamu
+	'token' => '67h0ks2kaofqoanl', // Ganti dengan token kamu
 	'to' => $phoneIntl,
 	'body' => $waMessage
 );
@@ -307,3 +347,7 @@ if ($err) {
 } else {
 	log_error("UltraMsg Response: " . $response);
 }
+
+session_write_close(); //agar $_SESSION['last_transaction'] tersimpan sebelum redirect
+header("Location: ../../thank-you.php");
+exit;

@@ -1,6 +1,6 @@
 <?php
 
-use Foodboard\Config;
+use JuraganTulangRangu\Config;
 
 require_once __DIR__ . '/Config/Config.php';
 require_once __DIR__ . '/../database/db.php'; 
@@ -441,7 +441,7 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 										<div class="order-header">
 											<h3>Order Summary 2/2</h3>
 										</div>
-										<div id="personalDetails" data-return-url='<?php echo Config::THANKYOU_URL; ?>' data-currency='<?php echo Config::CURRENCY; ?>'>
+										<div id="personalDetails">
 											<div class="order-body">
 												<div class="row">
 													<div class="col-md-12">

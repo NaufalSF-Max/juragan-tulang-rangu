@@ -1,17 +1,19 @@
 <?php
 
-use Foodboard\Config;
+use JuraganTulangRangu\Config;
 
 session_start();
 require_once __DIR__ . '/Config/Config.php';
 require_once __DIR__ . '/../database/db.php';
 
-if (!isset($_GET['invoice_id'])) {
+$invoiceId = $_GET['invoice_id'] ?? $_SESSION['last_invoice_id'] ?? null;
+unset($_SESSION['last_invoice_id']); // agar tidak diakses ulang
+
+if (!$invoiceId) {
     echo "<h2>Transaksi tidak ditemukan</h2>";
     exit;
 }
 
-$invoiceId = $_GET['invoice_id'];
 $stmt = $conn->prepare("SELECT * FROM transactions WHERE id = ?");
 $stmt->bind_param("s", $invoiceId);
 $stmt->execute();
@@ -210,7 +212,7 @@ if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] 
                                 <li><strong>Metode Pengiriman:</strong> <?php echo htmlspecialchars($trans['delivery_method']); ?></li>
                                 <li><strong>Pesan:</strong> <?php echo htmlspecialchars($trans['message']); ?></li>
                             </ul>
-                            <p class="mb-0"><a href="https://ultimatewebsolutions.net/foodboard/" class="btn-2">Back to Home</a></p>
+                            <p class="mb-0"><a href="../" class="btn-2">Back to Home</a></p>
                         </div>
                     </div>
                 </div>
@@ -297,7 +299,10 @@ if (isset($_SESSION['last_transaction']) && $_SESSION['last_transaction']['id'] 
     <!-- Main Javascript File -->
     <script src="../js/scripts.js"></script>
 
-    <?php unset($_SESSION['last_transaction']); ?>
+    <?php 
+        $invoiceId = $_SESSION['last_invoice_id'] ?? null;
+        unset($_SESSION['last_invoice_id']); // agar 1x pakai
+    ?>
 
 </body>
 
