@@ -335,7 +335,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button type="submit">Sign In</button>
     <div class="form-help">
       <div class="remember-me">
-        <input type="checkbox" id="remember-me">
+        <input type="checkbox" name="remember_me" id="remember-me">
         <label for="remember-me">Remember me</label>
       </div>
       <a href="../faq.php">Need help?</a>
