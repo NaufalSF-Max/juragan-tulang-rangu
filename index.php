@@ -98,7 +98,7 @@
 						<!-- Menu -->
 						<nav id="menu" class="main-menu">
 							<ul>
-								<li><span><a href="index.html">Home</a></span></li>
+								<li><span><a href="index.php">Home</a></span></li>
 								<li>
 									<span><a href="#">Order <i class="fa fa-chevron-down"></i></a></span>
 									<ul>
@@ -111,8 +111,8 @@
 									</ul>
 								</li>
 
-								<li><span><a href="faq.html">Faq</a></span></li>
-								<li><span><a href="contacts.html">Contacts</a></span></li>
+								<li><span><a href="faq.php">Faq</a></span></li>
+								<li><span><a href="contacts.php">Contacts</a></span></li>
 							</ul>
 						</nav>
 						<!-- Menu End -->
@@ -178,7 +178,7 @@
 								<small>Delivery</small>
 								<h2>Juragan Tulang Rangu Karawang</h2>
 								<p>Guide to ordering food with online payment.</p>
-								<a href="faq.html" class="btn-1">FAQ</a>
+								<a href="faq.php" class="btn-1">FAQ</a>
 							</div>
 						</div>
 					</div>
@@ -197,9 +197,9 @@
 					<div class="col-md-3">
 						<h5 class="footer-heading">Menu Links</h5>
 						<ul class="list-unstyled nav-links">
-							<li><i class="fa fa-angle-right"></i> <a href="index.html" class="footer-link">Home</a></li>
-							<li><i class="fa fa-angle-right"></i> <a href="faq.html" class="footer-link">FAQ</a></li>
-							<li><i class="fa fa-angle-right"></i> <a href="contacts.html" class="footer-link">Contacts</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="index.php" class="footer-link">Home</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="faq.php" class="footer-link">FAQ</a></li>
+							<li><i class="fa fa-angle-right"></i> <a href="contacts.php" class="footer-link">Contacts</a></li>
 						</ul>
 					</div>
 					<div class="col-md-3">
