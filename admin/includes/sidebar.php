@@ -29,12 +29,7 @@ function isActive($page) {
             </a>
         </li>
         <li>
-            <a href="financial_record.php" class="nav-link <?= isActive('financial_record.php') ?>">
-                <i class="fas fa-file-invoice-dollar me-2"></i> Pencatatan Keuangan
-            </a>
-        </li>
-        <li>
-            <a href="transaction_history.php" class="nav-link <?= isActive('transaction_history.php') ?>">
+            <a href="history.php" class="nav-link <?= isActive('transaction_history.php') ?>">
                 <i class="fas fa-history me-2"></i> History Transaksi
             </a>
         </li>
