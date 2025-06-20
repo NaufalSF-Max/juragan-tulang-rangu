@@ -87,6 +87,17 @@ include '../controllers/controller_add_product.php';
                     <td><?= htmlspecialchars($product['label'] ?? '-') ?></td>
                     <td><?= (int)$product['stock'] ?></td>
                     <td><?= htmlspecialchars($product['created_at']) ?></td>
+                    <td>
+                        <a href="edit_product.php?id=<?= $product['id'] ?>" class="btn btn-warning btn-sm me-1">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <form method="POST" action="../controllers/controller_delete_product.php" onsubmit="return confirm('Yakin ingin menghapus produk ini?');" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $product['id'] ?>">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Hapus
+                            </button>
+                        </form>
+                    <td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
