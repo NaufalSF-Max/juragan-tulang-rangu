@@ -539,7 +539,7 @@ if ($resultNamaProduk && $resultNamaProduk->num_rows > 0) {
 												</div>
 												<div class="row">
 													<div class="col-md-12">
-														<input type="hidden" name="payment_method" value="COD"> 
+														<input type="hidden" name="payment_method" value="Online"> 
 														<button type="submit" name="submit" id="submitOrder" class="btn-form-func">
 															<span class="btn-form-func-content">Submit</span>
 															<span class="icon"><i class="fa fa-check" aria-hidden="true"></i></span>
