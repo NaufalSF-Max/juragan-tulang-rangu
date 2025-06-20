@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../datase/db.php';
+require_once __DIR__ . '/../../../database/db.php';
 
 header('Content-Type: application/json');
 
